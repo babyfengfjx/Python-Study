@@ -1,5 +1,11 @@
 ---
 title: vsftpd配置使用
+categories: 
+- linux
+- 存储服务
+tags:
+- linux
+- ftp
 ---
 # vsftpd配置使用
 
