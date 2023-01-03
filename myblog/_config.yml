@@ -93,6 +93,13 @@ pagination_dir: page
 include:
 exclude:
 ignore:
+# algolia search
+algolia:
+  applicationID: 'RPHOC0H5T9'
+  apiKey: '723903e5de5899f6cc4ad96fc50931c1'
+  adminApiKey: 'fe4c456ceeaea4f264f0d242b5fe362c'
+  indexName: 'hexo_blog'
+  chunkSize: 5000
 
 # Extensions
 ## Plugins: https://hexo.io/plugins/

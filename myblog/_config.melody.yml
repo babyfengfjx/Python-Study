@@ -61,7 +61,14 @@ code_word_wrap: true
   #enable: false
   #hits:
     #per_page: 10
-
+algolia_search:
+  enable: true # or false
+  hits:
+    per_page: 10 # the number of search results per page
+  labels:
+    input_placeholder: Search for Posts
+    hits_empty: "We didn't find any results for the search: ${query}" # if there are no result
+    hits_stats: "${hits} results found in ${time} ms"
 # Local search
 # Please see doc for more details: https://molunerfinn.com/hexo-theme-melody-doc/third-party-support.html#local-search
 # ---------------
@@ -70,8 +77,13 @@ code_word_wrap: true
   #labels:
     #input_placeholder: Search for Posts
     #hits_empty: "We didn't find any results for the search: ${query}" # if there are no result
-
-# MathJax
+local_search:
+  enable: false # or false
+  trigger: auto
+  labels:
+    input_placeholder: Search for Posts
+    hits_empty: "We didn't find any results for the search: ${query}" # if there are no result
+#mathJax
 # Please see doc for more details: https://molunerfinn.com/hexo-theme-melody-doc/third-party-support.html#mathjax
 # ---------------
 mathjax:
@@ -266,7 +278,7 @@ valine:
 
 # Footer Settings
 # ---------------
-since: 
+since: 2021
 
 # 2013footer_custom_text: put custom text directly or put hitokoto to fetch random texts
 
