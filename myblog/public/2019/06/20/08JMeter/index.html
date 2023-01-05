@@ -1,0 +1,996 @@
+<!DOCTYPE html><html lang="zh-Hans"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"><meta name="description" content="JMeter基础"><meta name="keywords" content="Jmeter,性能测试"><meta name="author" content="babyfengfjx"><meta name="copyright" content="babyfengfjx"><title>JMeter基础 | babyfengfjx'Blog</title><link rel="shortcut icon" href="/melody-favicon.ico"><link rel="stylesheet" href="/css/index.css?version=1.9.1"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/font-awesome@latest/css/font-awesome.min.css?version=1.9.1"><meta name="format-detection" content="telephone=no"><meta http-equiv="x-dns-prefetch-control" content="on"><link rel="dns-prefetch" href="https://cdn.jsdelivr.net"><link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/instantsearch.js@2.1.1/dist/instantsearch.min.css"><script src="https://cdn.jsdelivr.net/npm/instantsearch.js@2.1.1/dist/instantsearch.min.js" defer></script><meta http-equiv="Cache-Control" content="no-transform"><meta http-equiv="Cache-Control" content="no-siteapp"><script>var GLOBAL_CONFIG = { 
+  root: '/',
+  algolia: {"appId":"RPHOC0H5T9","apiKey":"723903e5de5899f6cc4ad96fc50931c1","indexName":"hexo_blog","hits":{"per_page":10},"languages":{"input_placeholder":"搜索文章","hits_empty":"找不到您查询的内容:${query}","hits_stats":"找到 ${hits} 条结果，用时 ${time} 毫秒"}},
+  localSearch: undefined,
+  copy: {
+    success: '复制成功',
+    error: '复制错误',
+    noSupport: '浏览器不支持'
+  },
+  hexoVersion: '6.3.0'
+} </script><meta name="generator" content="Hexo 6.3.0"></head><body><i class="fa fa-arrow-right" id="toggle-sidebar" aria-hidden="true"></i><div id="sidebar" data-display="true"><div class="toggle-sidebar-info text-center"><span data-toggle="切换文章详情">切换站点概览</span><hr></div><div class="sidebar-toc"><div class="sidebar-toc__title">目录</div><div class="sidebar-toc__progress"><span class="progress-notice">你已经读了</span><span class="progress-num">0</span><span class="progress-percentage">%</span><div class="sidebar-toc__progress-bar"></div></div><div class="sidebar-toc__content"><ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#%E6%80%A7%E8%83%BD%E6%B5%8B%E8%AF%95%E5%9F%BA%E6%9C%AC%E6%A6%82%E5%BF%B5"><span class="toc-number">1.</span> <span class="toc-text">性能测试基本概念</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#RT-Response-time"><span class="toc-number">1.1.</span> <span class="toc-text">RT -Response time</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%B3%BB%E7%BB%9F%E5%A4%84%E7%90%86%E8%83%BD%E5%8A%9B"><span class="toc-number">1.2.</span> <span class="toc-text">系统处理能力</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%AE%80%E7%A7%B0"><span class="toc-number">1.2.1.</span> <span class="toc-text">简称</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%A0%87%E5%87%86"><span class="toc-number">1.2.2.</span> <span class="toc-text">标准</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%B9%B6%E5%8F%91%E7%94%A8%E6%88%B7%E6%95%B0%E9%87%8F"><span class="toc-number">1.3.</span> <span class="toc-text">并发用户数量</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%AE%80%E7%A7%B0-1"><span class="toc-number">1.3.1.</span> <span class="toc-text">简称</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%A0%87%E5%87%86-1"><span class="toc-number">1.3.2.</span> <span class="toc-text">标准</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E9%94%99%E8%AF%AF%E7%8E%87"><span class="toc-number">1.4.</span> <span class="toc-text">错误率</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%AE%9A%E4%B9%89%E5%8F%8A%E8%A7%A3%E9%87%8A"><span class="toc-number">1.4.1.</span> <span class="toc-text">定义及解释</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%A0%87%E5%87%86-2"><span class="toc-number">1.4.2.</span> <span class="toc-text">标准</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#CPU"><span class="toc-number">1.5.</span> <span class="toc-text">CPU</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%AE%9A%E4%B9%89%E5%8F%8A%E8%A7%A3%E9%87%8A-%E5%AE%9A%E4%B9%89%E5%8F%8A%E8%A7%A3%E9%87%8A-1-ListParagraph"><span class="toc-number">1.5.1.</span> <span class="toc-text">定义及解释 {定义及解释-1 .ListParagraph}</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Memory"><span class="toc-number">1.6.</span> <span class="toc-text">Memory</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%A3%81%E7%9B%98%E5%90%9E%E5%90%90%E9%87%8F-Disk-Throughput"><span class="toc-number">1.7.</span> <span class="toc-text">磁盘吞吐量 Disk Throughput.</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%BD%91%E7%BB%9C%E5%90%9E%E5%90%90%E9%87%8F-Network-Throughput"><span class="toc-number">1.8.</span> <span class="toc-text">网络吞吐量 Network Throughput</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E6%80%A7%E8%83%BD%E6%B5%8B%E8%AF%95%E5%9F%BA%E6%9C%AC%E6%B5%81%E7%A8%8B"><span class="toc-number">2.</span> <span class="toc-text">性能测试基本流程</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E6%80%A7%E8%83%BD%E6%B5%8B%E8%AF%95%E5%B7%A5%E5%85%B7"><span class="toc-number">3.</span> <span class="toc-text">性能测试工具</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Jmeter%E7%AE%80%E4%BB%8B"><span class="toc-number">4.</span> <span class="toc-text">Jmeter简介</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#Jmeter%E7%9A%84%E5%9F%BA%E6%9C%AC%E6%A6%82%E5%BF%B5"><span class="toc-number">4.1.</span> <span class="toc-text">Jmeter的基本概念</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%88%91%E4%BB%AC%E4%B8%BA%E4%BB%80%E4%B9%88%E4%BD%BF%E7%94%A8Jmeter"><span class="toc-number">4.2.</span> <span class="toc-text">我们为什么使用Jmeter</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Jmeter%E5%AE%89%E8%A3%85%E9%85%8D%E7%BD%AE%E5%8F%8A%E7%9B%AE%E5%BD%95%E7%BB%93%E6%9E%84"><span class="toc-number">5.</span> <span class="toc-text">Jmeter安装配置及目录结构</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#Windows%E4%B8%8BJmeter%E4%B8%8B%E8%BD%BD%E5%AE%89%E8%A3%85"><span class="toc-number">5.1.</span> <span class="toc-text">Windows下Jmeter下载安装</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Jmeter%E7%9A%84%E7%9B%AE%E5%BD%95%E7%BB%93%E6%9E%84"><span class="toc-number">5.2.</span> <span class="toc-text">Jmeter的目录结构</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Jmeter%E7%AE%80%E5%8D%95%E5%85%A5%E9%97%A8"><span class="toc-number">6.</span> <span class="toc-text">Jmeter简单入门</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BF%AE%E6%94%B9%E8%AF%AD%E8%A8%80"><span class="toc-number">6.1.</span> <span class="toc-text">修改语言</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%88%9B%E5%BB%BA%E6%B5%8B%E8%AF%95%E8%AE%A1%E5%88%92"><span class="toc-number">6.2.</span> <span class="toc-text">创建测试计划</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%B7%BB%E5%8A%A0%E7%BA%BF%E7%A8%8B%E7%BB%84"><span class="toc-number">6.3.</span> <span class="toc-text">添加线程组</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%B7%BB%E5%8A%A0sampler%E8%AE%BE%E7%BD%AEhttp%E8%AF%B7%E6%B1%82"><span class="toc-number">6.4.</span> <span class="toc-text">添加sampler设置http请求</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%B7%BB%E5%8A%A0%E7%BB%93%E6%9E%9C%E6%A0%91"><span class="toc-number">6.5.</span> <span class="toc-text">添加结果树</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%9F%A5%E7%9C%8B%E7%BB%93%E6%9E%9C"><span class="toc-number">6.6.</span> <span class="toc-text">查看结果</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E6%B5%8B%E8%AF%95%E8%AE%A1%E5%88%92"><span class="toc-number">7.</span> <span class="toc-text">测试计划</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E7%BA%BF%E7%A8%8B%E7%BB%84"><span class="toc-number">8.</span> <span class="toc-text">线程组</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Sampler-HTTP%E8%AF%B7%E6%B1%82"><span class="toc-number">9.</span> <span class="toc-text">Sampler --HTTP请求</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E7%BB%93%E6%9E%9C%E6%94%B6%E9%9B%86"><span class="toc-number">10.</span> <span class="toc-text">结果收集</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%9F%A5%E7%9C%8B%E7%BB%93%E6%9E%9C%E6%A0%91"><span class="toc-number">10.1.</span> <span class="toc-text">查看结果树</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E8%A1%A8%E6%A0%BC%E6%9F%A5%E7%9C%8B%E7%BB%93%E6%9E%9C"><span class="toc-number">10.2.</span> <span class="toc-text">表格查看结果</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E8%81%9A%E5%90%88%E6%8A%A5%E5%91%8A"><span class="toc-number">10.3.</span> <span class="toc-text">聚合报告</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Summary-Report"><span class="toc-number">10.4.</span> <span class="toc-text">Summary Report</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Jmeter%E5%8F%82%E6%95%B0%E5%8C%96"><span class="toc-number">11.</span> <span class="toc-text">Jmeter参数化</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%94%A8%E6%88%B7%E5%AE%9A%E4%B9%89%E7%9A%84%E5%8F%98%E9%87%8F"><span class="toc-number">11.1.</span> <span class="toc-text">用户定义的变量</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%94%A8%E6%88%B7%E5%8F%82%E6%95%B0"><span class="toc-number">11.2.</span> <span class="toc-text">用户参数</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BD%BF%E7%94%A8csv%E9%85%8D%E7%BD%AE%E5%8E%9F%E4%BB%B6"><span class="toc-number">11.3.</span> <span class="toc-text">使用csv配置原件</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BD%BF%E7%94%A8%E9%9A%8F%E6%9C%BA%E5%87%BD%E6%95%B0%E5%8A%A9%E6%89%8B"><span class="toc-number">11.4.</span> <span class="toc-text">使用随机函数助手</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%94%9F%E6%88%90%E9%9A%8F%E6%9C%BA%E5%AD%97%E7%AC%A6%E4%B8%B2"><span class="toc-number">11.4.1.</span> <span class="toc-text">生成随机字符串</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%94%9F%E6%88%90%E9%9A%8F%E6%9C%BA%E6%95%B0%E5%AD%97"><span class="toc-number">11.4.2.</span> <span class="toc-text">生成随机数字</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%8F%82%E6%95%B0%E5%BC%95%E7%94%A8"><span class="toc-number">11.4.3.</span> <span class="toc-text">参数引用</span></a></li></ol></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Jmeter%E6%96%AD%E8%A8%80-%E6%A3%80%E6%9F%A5%E7%82%B9"><span class="toc-number">12.</span> <span class="toc-text">Jmeter断言--检查点</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Jmeter%E5%AE%9A%E6%97%B6%E5%99%A8"><span class="toc-number">13.</span> <span class="toc-text">Jmeter定时器</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%9B%BA%E5%AE%9A%E5%AE%9A%E6%97%B6%E5%99%A8"><span class="toc-number">13.1.</span> <span class="toc-text">固定定时器</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E9%AB%98%E6%96%AF%E5%AE%9A%E6%97%B6%E5%99%A8"><span class="toc-number">13.2.</span> <span class="toc-text">高斯定时器</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%90%8C%E6%AD%A5%E5%AE%9A%E6%97%B6%E5%99%A8%EF%BC%88Synchronizing-Timer%EF%BC%89"><span class="toc-number">13.3.</span> <span class="toc-text">同步定时器（Synchronizing Timer）</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Jmeter%E9%85%8D%E7%BD%AE%E5%8E%9F%E4%BB%B6"><span class="toc-number">14.</span> <span class="toc-text">Jmeter配置原件</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#HTTP-Cookie%E7%AE%A1%E7%90%86%E5%99%A8"><span class="toc-number">14.1.</span> <span class="toc-text">HTTP Cookie管理器</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#HTTP%E4%BF%A1%E6%81%AF%E5%A4%B4%E7%AE%A1%E7%90%86%E5%99%A8"><span class="toc-number">14.2.</span> <span class="toc-text">HTTP信息头管理器</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#HTTP-Cache%E7%AE%A1%E7%90%86%E5%99%A8"><span class="toc-number">14.3.</span> <span class="toc-text">HTTP Cache管理器</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#HTTP-%E8%AF%B7%E6%B1%82%E9%BB%98%E8%AE%A4%E5%80%BC"><span class="toc-number">14.4.</span> <span class="toc-text">HTTP 请求默认值</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Jmeter%E9%80%BB%E8%BE%91%E6%8E%A7%E5%88%B6%E5%99%A8"><span class="toc-number">15.</span> <span class="toc-text">Jmeter逻辑控制器</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%AE%80%E5%8D%95%E6%8E%A7%E5%88%B6%E5%99%A8"><span class="toc-number">15.1.</span> <span class="toc-text">简单控制器</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%BE%AA%E7%8E%AF%E6%8E%A7%E5%88%B6%E5%99%A8"><span class="toc-number">15.2.</span> <span class="toc-text">循环控制器</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BA%8B%E5%8A%A1%E6%8E%A7%E5%88%B6%E5%99%A8"><span class="toc-number">15.3.</span> <span class="toc-text">事务控制器</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Jmeter%E5%85%B3%E8%81%94-%E5%90%8E%E7%BD%AE%E5%A4%84%E7%90%86%E5%99%A8"><span class="toc-number">16.</span> <span class="toc-text">Jmeter关联-后置处理器</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%AD%A3%E5%88%99%E8%A1%A8%E8%BE%BE%E5%BC%8F%E6%8F%90%E5%8F%96"><span class="toc-number">16.1.</span> <span class="toc-text">正则表达式提取</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BD%BF%E7%94%A8debug-Sampler%E8%8E%B7%E5%8F%96%E5%8F%82%E6%95%B0%E7%9A%84%E5%90%8D%E7%A7%B0"><span class="toc-number">16.2.</span> <span class="toc-text">使用debug Sampler获取参数的名称</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%8F%82%E6%95%B0%E5%8C%96%E8%8E%B7%E5%8F%96%E5%8F%82%E6%95%B0%E5%86%85%E5%AE%B9"><span class="toc-number">16.3.</span> <span class="toc-text">参数化获取参数内容</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%85%83%E4%BB%B6%E7%9A%84%E6%89%A7%E8%A1%8C%E9%A1%BA%E5%BA%8F"><span class="toc-number">17.</span> <span class="toc-text">元件的执行顺序</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Jmeter%E6%B7%BB%E5%8A%A0%E6%8F%92%E4%BB%B6"><span class="toc-number">18.</span> <span class="toc-text">Jmeter添加插件</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%89%93%E5%BC%80Jmeter%EF%BC%8C%E6%9F%A5%E7%9C%8B%E6%98%AF%E5%90%A6%E6%9C%89%E6%8F%92%E4%BB%B6%E7%AE%A1%E7%90%86%E5%99%A8"><span class="toc-number">18.1.</span> <span class="toc-text">打开Jmeter，查看是否有插件管理器</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%9C%BA%E6%99%AF%E6%8E%A7%E5%88%B6%E6%8F%92%E4%BB%B6"><span class="toc-number">18.2.</span> <span class="toc-text">场景控制插件</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#Stepping-Thread-Group"><span class="toc-number">18.2.1.</span> <span class="toc-text">Stepping Thread Group</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E8%AE%BE%E7%BD%AE%E5%90%AF%E5%8A%A8%E5%9C%BA%E6%99%AF"><span class="toc-number">18.2.2.</span> <span class="toc-text">设置启动场景</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%BB%93%E6%9E%9C%E7%9B%91%E5%90%AC%E6%8F%92%E4%BB%B6"><span class="toc-number">18.3.</span> <span class="toc-text">结果监听插件</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Jmeter%E8%84%9A%E6%9C%AC%E5%BD%95%E5%88%B6"><span class="toc-number">19.</span> <span class="toc-text">Jmeter脚本录制</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BB%80%E4%B9%88%E6%98%AF%E8%84%9A%E6%9C%AC%E5%BD%95%E5%88%B6"><span class="toc-number">19.1.</span> <span class="toc-text">什么是脚本录制</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Jemeter%E8%84%9A%E6%9C%AC%E5%BD%95%E5%88%B6%E6%96%B9%E5%BC%8F"><span class="toc-number">19.2.</span> <span class="toc-text">Jemeter脚本录制方式</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E4%BD%BF%E7%94%A8Jmeter%E8%87%AA%E5%B8%A6%E7%9A%84%E4%BB%A3%E7%90%86%E6%9C%8D%E5%8A%A1%E5%99%A8%E8%BF%9B%E8%A1%8C%E8%84%9A%E6%9C%AC%E5%BD%95%E5%88%B6"><span class="toc-number">20.</span> <span class="toc-text">使用Jmeter自带的代理服务器进行脚本录制</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%9C%A8%E6%B5%8B%E8%AF%95%E8%AE%A1%E5%88%92%E4%B8%8A%E5%88%9B%E5%BB%BA%E7%BA%BF%E7%A8%8B%E7%BB%84"><span class="toc-number">20.1.</span> <span class="toc-text">在测试计划上创建线程组</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%B7%BB%E5%8A%A0%E5%BD%95%E5%88%B6%E6%8E%A7%E5%88%B6%E5%99%A8"><span class="toc-number">20.2.</span> <span class="toc-text">添加录制控制器</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%9C%A8%E5%B7%A5%E4%BD%9C%E5%8F%B0%E4%B8%8A%E6%B7%BB%E5%8A%A0http%E4%BB%A3%E7%90%86%E6%9C%8D%E5%8A%A1%E5%99%A8"><span class="toc-number">20.3.</span> <span class="toc-text">在工作台上添加http代理服务器</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E9%85%8D%E7%BD%AEHttp%E4%BB%A3%E7%90%86%E6%9C%8D%E5%8A%A1%E5%99%A8"><span class="toc-number">20.4.</span> <span class="toc-text">配置Http代理服务器</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E9%85%8D%E7%BD%AE%E6%B5%8F%E8%A7%88%E5%99%A8"><span class="toc-number">20.5.</span> <span class="toc-text">配置浏览器</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#Google%E6%B5%8F%E8%A7%88%E5%99%A8"><span class="toc-number">20.5.1.</span> <span class="toc-text">Google浏览器</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%81%AB%E7%8B%90%E6%B5%8F%E8%A7%88%E5%99%A8"><span class="toc-number">20.5.2.</span> <span class="toc-text">火狐浏览器</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%B5%8F%E8%A7%88%E5%99%A8%E8%AF%B7%E6%B1%82%E6%B5%8B%E8%AF%95"><span class="toc-number">20.6.</span> <span class="toc-text">浏览器请求测试</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E8%BF%87%E6%BB%A4%E4%BF%A1%E6%81%AF"><span class="toc-number">20.7.</span> <span class="toc-text">过滤信息</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Android%E6%89%8B%E6%9C%BA%E7%AB%AF%E8%84%9A%E6%9C%AC%E5%BD%95%E5%88%B6"><span class="toc-number">21.</span> <span class="toc-text">Android手机端脚本录制</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%9F%A5%E7%9C%8B%E7%94%B5%E8%84%91IP"><span class="toc-number">21.1.</span> <span class="toc-text">查看电脑IP</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E9%85%8D%E7%BD%AE%E6%89%8B%E6%9C%BA%E7%BD%91%E8%B7%AF%E8%BF%9E%E6%8E%A5"><span class="toc-number">21.2.</span> <span class="toc-text">配置手机网路连接</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%89%8B%E6%9C%BA%E8%AE%BF%E9%97%AEapp"><span class="toc-number">21.3.</span> <span class="toc-text">手机访问app</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%A8%A1%E6%8B%9F%E7%99%BB%E9%99%86%E6%93%8D%E4%BD%9C"><span class="toc-number">21.4.</span> <span class="toc-text">模拟登陆操作</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%89%A7%E8%A1%8C%E7%BB%93%E6%9D%9F%E4%B9%8B%E5%90%8E%EF%BC%8C%E5%81%9C%E6%AD%A2%E8%84%9A%E6%9C%AC%E5%BD%95%E5%88%B6"><span class="toc-number">21.5.</span> <span class="toc-text">执行结束之后，停止脚本录制</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E8%84%9A%E6%9C%AC%E6%B5%8B%E8%AF%95-%E7%BA%BF%E7%A8%8B%E7%BB%84%E8%AE%BE%E7%BD%AE10%E4%B8%AA%E7%BA%BF%E7%A8%8B%E5%88%86%E5%88%AB%E8%AF%B7%E6%B1%8210%E6%AC%A1"><span class="toc-number">21.6.</span> <span class="toc-text">脚本测试-线程组设置10个线程分别请求10次</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%9F%A5%E7%9C%8B%E7%BB%93%E6%9E%9C%E6%A0%91-1"><span class="toc-number">21.7.</span> <span class="toc-text">查看结果树</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#BadBoy%E8%84%9A%E6%9C%AC%E5%BD%95%E5%88%B6"><span class="toc-number">22.</span> <span class="toc-text">BadBoy脚本录制</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%AE%89%E8%A3%85badboy%E8%84%9A%E6%9C%AC%E8%BD%AF%E4%BB%B6"><span class="toc-number">22.1.</span> <span class="toc-text">安装badboy脚本软件</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%89%93%E5%BC%80badboy%E8%BD%AF%E4%BB%B6"><span class="toc-number">22.2.</span> <span class="toc-text">打开badboy软件</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#badboy%E8%84%9A%E6%9C%AC%E5%BD%95%E5%88%B6"><span class="toc-number">22.3.</span> <span class="toc-text">badboy脚本录制</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%B7%BB%E5%8A%A0%E9%AA%8C%E8%AF%81%E7%82%B9"><span class="toc-number">22.4.</span> <span class="toc-text">添加验证点</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#badboy%E5%8F%82%E6%95%B0%E5%8C%96"><span class="toc-number">22.5.</span> <span class="toc-text">badboy参数化</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%AF%BC%E5%87%BAJmeter%E8%84%9A%E6%9C%AC"><span class="toc-number">22.6.</span> <span class="toc-text">导出Jmeter脚本</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%9C%A8Jmeter%E4%B8%AD%E5%AF%BC%E5%85%A5badboy%E7%94%9F%E6%88%90%E7%9A%84%E8%84%9A%E6%9C%AC%EF%BC%8C%E9%AA%8C%E8%AF%81%E6%B5%8B%E8%AF%95"><span class="toc-number">22.7.</span> <span class="toc-text">在Jmeter中导入badboy生成的脚本，验证测试</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#badboy%E5%B9%B6%E5%8F%91%E6%B5%8B%E8%AF%95"><span class="toc-number">22.8.</span> <span class="toc-text">badboy并发测试</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#badboy%E6%B5%8B%E8%AF%95%E6%8A%A5%E5%91%8A"><span class="toc-number">22.9.</span> <span class="toc-text">badboy测试报告</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Jmeter%E6%95%B0%E6%8D%AE%E5%BA%93%E5%8E%8B%E5%8A%9B%E6%B5%8B%E8%AF%95"><span class="toc-number">23.</span> <span class="toc-text">Jmeter数据库压力测试</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%85%88%E9%85%8D%E7%BD%AEjdbc%E9%A9%B1%E5%8A%A8"><span class="toc-number">23.1.</span> <span class="toc-text">先配置jdbc驱动</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%95%B0%E6%8D%AE%E5%BA%93%E6%99%AE%E9%80%9A%E6%9F%A5%E8%AF%A2%E6%93%8D%E4%BD%9C"><span class="toc-number">23.2.</span> <span class="toc-text">数据库普通查询操作</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Jmeter%E9%A2%84%E7%BC%96%E8%AF%91%E5%8F%82%E6%95%B0%E6%9F%A5%E8%AF%A2%E6%96%B9%E5%BC%8F"><span class="toc-number">23.3.</span> <span class="toc-text">Jmeter预编译参数查询方式</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#ForEach%E6%8E%A7%E5%88%B6%E5%99%A8%E5%BE%AA%E7%8E%AF%E8%AF%B7%E6%B1%82"><span class="toc-number">23.4.</span> <span class="toc-text">ForEach控制器循环请求</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#JDBC%E9%A2%84%E7%BC%96%E8%AF%91%E6%96%B9%E5%BC%8F%E4%BF%AE%E6%94%B9%E6%95%B0%E6%8D%AE"><span class="toc-number">23.5.</span> <span class="toc-text">JDBC预编译方式修改数据</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E9%85%8D%E7%BD%AEcsv%E6%96%87%E4%BB%B6"><span class="toc-number">23.5.1.</span> <span class="toc-text">配置csv文件</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%BF%AE%E6%94%B9%E6%95%B0%E6%8D%AE"><span class="toc-number">23.5.2.</span> <span class="toc-text">修改数据</span></a></li></ol></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Jmeter%E5%8E%8B%E6%B5%8B%E6%8E%A5%E5%8F%A3%E7%9A%84%E6%80%A7%E8%83%BD%E4%BC%98%E5%8C%96"><span class="toc-number">24.</span> <span class="toc-text">Jmeter压测接口的性能优化</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Linux%E4%B8%8B%E8%BF%90%E8%A1%8Cjmeter%E5%8E%8B%E6%B5%8B"><span class="toc-number">25.</span> <span class="toc-text">Linux下运行jmeter压测</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E8%A7%A3%E5%8E%8BJDK8%E5%88%B0Linux"><span class="toc-number">25.1.</span> <span class="toc-text">解压JDK8到Linux</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E9%85%8D%E7%BD%AE%E7%8E%AF%E5%A2%83%E5%8F%98%E9%87%8F"><span class="toc-number">25.2.</span> <span class="toc-text">配置环境变量</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%88%B7%E6%96%B0%E9%85%8D%E7%BD%AE%E6%96%87%E4%BB%B6"><span class="toc-number">25.3.</span> <span class="toc-text">刷新配置文件</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E8%A7%A3%E5%8E%8B%E5%B9%B6%E5%AE%89%E8%A3%85jmeter4-0"><span class="toc-number">25.4.</span> <span class="toc-text">解压并安装jmeter4.0</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E9%85%8D%E7%BD%AEjmeter%E7%8E%AF%E5%A2%83%E5%8F%98%E9%87%8F"><span class="toc-number">25.5.</span> <span class="toc-text">配置jmeter环境变量</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E8%A7%A3%E5%8E%8Bjmeter%E5%88%B0usr-x2F-local"><span class="toc-number">25.5.1.</span> <span class="toc-text">解压jmeter到usr&#x2F;local</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%90%AF%E5%8A%A8Jmeter"><span class="toc-number">25.5.2.</span> <span class="toc-text">启动Jmeter</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%89%93%E5%BC%80%E7%B3%BB%E7%BB%9F%E9%85%8D%E7%BD%AE%E6%96%87%E4%BB%B6"><span class="toc-number">25.5.3.</span> <span class="toc-text">打开系统配置文件</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E9%85%8D%E7%BD%AE%E7%8E%AF%E5%A2%83%E5%8F%98%E9%87%8F-1"><span class="toc-number">25.5.4.</span> <span class="toc-text">配置环境变量</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%88%B7%E6%96%B0%E7%B3%BB%E7%BB%9F%E9%85%8D%E7%BD%AE%E6%96%87%E4%BB%B6"><span class="toc-number">25.5.5.</span> <span class="toc-text">刷新系统配置文件</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%89%A7%E8%A1%8Cjmeter"><span class="toc-number">25.5.6.</span> <span class="toc-text">执行jmeter -?</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%B0%86windows%E4%B8%8A%E5%86%99%E5%A5%BD%E7%9A%84%E8%84%9A%E6%9C%AC%E5%AF%BC%E5%85%A5%E5%88%B0Linux"><span class="toc-number">25.5.7.</span> <span class="toc-text">将windows上写好的脚本导入到Linux</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E8%BF%9B%E8%A1%8C%E6%B5%8B%E8%AF%95"><span class="toc-number">25.5.8.</span> <span class="toc-text">进行测试</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%B0%86%E6%B5%8B%E8%AF%95%E7%BB%93%E6%9E%9C%E5%AF%BC%E5%85%A5%E5%88%B0Jmeter%E4%B8%AD%E6%9F%A5%E7%9C%8B%E7%BB%93%E6%9E%9C%E6%95%B0%E6%8D%AE"><span class="toc-number">25.6.</span> <span class="toc-text">将测试结果导入到Jmeter中查看结果数据</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Jmeter%E5%8E%8B%E6%B5%8B%E7%94%9F%E6%88%90HTML%E6%B5%8B%E8%AF%95%E6%8A%A5%E5%91%8A"><span class="toc-number">26.</span> <span class="toc-text">Jmeter压测生成HTML测试报告</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Jmeter-HTML%E6%8A%A5%E5%91%8Adashboard%E8%AE%B2%E8%A7%A3"><span class="toc-number">27.</span> <span class="toc-text">Jmeter HTML报告dashboard讲解</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#Test-and-Report-informations"><span class="toc-number">27.1.</span> <span class="toc-text">Test and Report informations</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#APDEX-Application-performance-Index"><span class="toc-number">27.2.</span> <span class="toc-text">APDEX(Application performance Index)</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Requests-Summary"><span class="toc-number">27.3.</span> <span class="toc-text">Requests Summary</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Statistics-%E7%BB%9F%E8%AE%A1%E6%95%B0%E6%8D%AE"><span class="toc-number">27.4.</span> <span class="toc-text">Statistics 统计数据</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E9%94%99%E8%AF%AF%E4%BF%A1%E6%81%AF%E7%BB%9F%E8%AE%A1"><span class="toc-number">27.5.</span> <span class="toc-text">错误信息统计</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Jmeter%E5%9B%BE%E5%BD%A2%E5%8C%96HTML%E5%8E%8B%E6%B5%8B%E6%8A%A5%E5%91%8ACharts%E6%8A%A5%E8%A1%A8%E8%AE%B2%E8%A7%A3"><span class="toc-number">28.</span> <span class="toc-text">Jmeter图形化HTML压测报告Charts报表讲解</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#Over-Time%EF%BC%88%E9%9A%8F%E7%9D%80%E6%97%B6%E9%97%B4%E7%9A%84%E5%8F%98%E5%8C%96%EF%BC%89"><span class="toc-number">28.1.</span> <span class="toc-text">Over Time（随着时间的变化）</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Throughput"><span class="toc-number">28.2.</span> <span class="toc-text">Throughput</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Response-Times"><span class="toc-number">28.3.</span> <span class="toc-text">Response Times</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Windows-jmeter-unGUI%E6%B5%8B%E8%AF%95"><span class="toc-number">29.</span> <span class="toc-text">Windows jmeter unGUI测试</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E8%AE%BE%E7%BD%AE%E7%8E%AF%E5%A2%83%E5%8F%98%E9%87%8F"><span class="toc-number">29.1.</span> <span class="toc-text">设置环境变量</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%97%A0%E7%95%8C%E9%9D%A2%E6%B5%8B%E8%AF%95"><span class="toc-number">29.2.</span> <span class="toc-text">无界面测试</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%88%86%E5%B8%83%E5%BC%8F%E5%8E%8B%E6%B5%8B%E4%BB%8B%E7%BB%8D"><span class="toc-number">30.</span> <span class="toc-text">分布式压测介绍</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Jmeter%E5%88%86%E5%B8%83%E5%BC%8F%E5%8E%8B%E6%B5%8B%E5%8E%9F%E7%90%86"><span class="toc-number">31.</span> <span class="toc-text">Jmeter分布式压测原理</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Jmeter%E5%88%86%E5%B8%83%E5%BC%8F%E5%8E%8B%E6%B5%8B%E5%AE%9E%E6%88%98"><span class="toc-number">32.</span> <span class="toc-text">Jmeter分布式压测实战</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#Slave%E6%9C%BA%E5%99%A8%E8%AE%BE%E7%BD%AE"><span class="toc-number">32.1.</span> <span class="toc-text">Slave机器设置</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E8%AE%BE%E7%BD%AEMaster%E8%AE%BE%E5%A4%87"><span class="toc-number">32.2.</span> <span class="toc-text">设置Master设备</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%B9%B6%E5%8F%91%E7%94%A8%E6%88%B7%E5%92%8CTPS%E5%85%B3%E7%B3%BB"><span class="toc-number">33.</span> <span class="toc-text">并发用户和TPS关系</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#Vu%E5%92%8CTPS%E6%8D%A2%E7%AE%97"><span class="toc-number">33.1.</span> <span class="toc-text">Vu和TPS换算</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%A6%82%E4%BD%95%E8%8E%B7%E5%8F%96Vu%E5%92%8CTPS"><span class="toc-number">33.2.</span> <span class="toc-text">如何获取Vu和TPS</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%80%BB%E7%BB%93"><span class="toc-number">33.3.</span> <span class="toc-text">总结</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E6%80%A7%E8%83%BD%E6%8C%87%E6%A0%87"><span class="toc-number">34.</span> <span class="toc-text">性能指标</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%B8%AD%E9%97%B4%E4%BB%B6%E6%8C%87%E6%A0%87"><span class="toc-number">34.1.</span> <span class="toc-text">中间件指标</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%AE%9A%E4%B9%89%E5%8F%8A%E8%A7%A3%E9%87%8A-1"><span class="toc-number">34.1.1.</span> <span class="toc-text">定义及解释</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%A0%87%E5%87%86-3"><span class="toc-number">34.1.2.</span> <span class="toc-text">标准</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%95%B0%E6%8D%AE%E5%BA%93%E6%8C%87%E6%A0%87"><span class="toc-number">34.2.</span> <span class="toc-text">数据库指标</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%AE%9A%E4%B9%89%E5%8F%8A%E8%A7%A3%E9%87%8A-2"><span class="toc-number">34.2.1.</span> <span class="toc-text">定义及解释</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%A0%87%E5%87%86-4"><span class="toc-number">34.2.2.</span> <span class="toc-text">标准</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%89%8D%E7%AB%AF%E6%8C%87%E6%A0%87"><span class="toc-number">34.3.</span> <span class="toc-text">前端指标</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%AE%9A%E4%B9%89%E5%8F%8A%E8%A7%A3%E9%87%8A-3"><span class="toc-number">34.3.1.</span> <span class="toc-text">定义及解释</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%A0%87%E5%87%86-5"><span class="toc-number">34.3.2.</span> <span class="toc-text">标准</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%A8%B3%E5%AE%9A%E6%80%A7%E6%8C%87%E6%A0%87"><span class="toc-number">34.4.</span> <span class="toc-text">稳定性指标</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%AE%9A%E4%B9%89%E5%8F%8A%E8%A7%A3%E9%87%8A-4"><span class="toc-number">34.4.1.</span> <span class="toc-text">定义及解释</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%A0%87%E5%87%86-6"><span class="toc-number">34.4.2.</span> <span class="toc-text">标准</span></a></li></ol></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E6%80%A7%E8%83%BD%E5%88%86%E6%9E%90"><span class="toc-number">35.</span> <span class="toc-text">性能分析</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%B5%81%E7%A8%8B"><span class="toc-number">35.1.</span> <span class="toc-text">流程</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%A1%AC%E4%BB%B6-x2F-%E8%A7%84%E6%A0%BC%E4%B8%8A%E7%9A%84%E7%93%B6%E9%A2%88"><span class="toc-number">35.1.1.</span> <span class="toc-text">硬件&#x2F;规格上的瓶颈</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%B8%AD%E9%97%B4%E4%BB%B6%E4%B8%8A%E7%9A%84%E6%80%A7%E8%83%BD%E7%93%B6%E9%A2%88"><span class="toc-number">35.1.2.</span> <span class="toc-text">中间件上的性能瓶颈</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%BA%94%E7%94%A8%E7%A8%8B%E5%BA%8F%E4%B8%8A%E7%9A%84%E6%80%A7%E8%83%BD%E7%93%B6%E9%A2%88"><span class="toc-number">35.1.3.</span> <span class="toc-text">应用程序上的性能瓶颈</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F%E4%B8%8A%E7%9A%84%E6%80%A7%E8%83%BD%E7%93%B6%E9%A2%88"><span class="toc-number">35.1.4.</span> <span class="toc-text">操作系统上的性能瓶颈</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%BD%91%E7%BB%9C%E8%AE%BE%E5%A4%87%E4%B8%8A%E7%9A%84%E6%80%A7%E8%83%BD%E7%93%B6%E9%A2%88"><span class="toc-number">35.1.5.</span> <span class="toc-text">网络设备上的性能瓶颈</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%96%B9%E6%B3%95"><span class="toc-number">35.2.</span> <span class="toc-text">方法</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#CPU-1"><span class="toc-number">35.2.1.</span> <span class="toc-text">CPU</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Memory-1"><span class="toc-number">35.2.2.</span> <span class="toc-text">Memory</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%A3%81%E7%9B%98I-x2F-O"><span class="toc-number">35.2.3.</span> <span class="toc-text">磁盘I&#x2F;O</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%BD%91%E7%BB%9CI-x2F-O"><span class="toc-number">35.2.4.</span> <span class="toc-text">网络I&#x2F;O</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#JVM"><span class="toc-number">35.2.5.</span> <span class="toc-text">JVM</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%BA%BF%E7%A8%8B%E6%B1%A0"><span class="toc-number">35.2.6.</span> <span class="toc-text">线程池</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#JDBC%E8%BF%9E%E6%8E%A5%E6%B1%A0"><span class="toc-number">35.2.7.</span> <span class="toc-text">JDBC连接池</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#SQL"><span class="toc-number">35.2.8.</span> <span class="toc-text">SQL</span></a></li></ol></li></ol></li></ol></div></div><div class="author-info hide"><div class="author-info__avatar text-center"><img src="https://github.com/babyfengfjx/babyfengfjx.github.io/blob/main/pictures/avatar/avatar.jpg?raw=true"></div><div class="author-info__name text-center">babyfengfjx</div><div class="author-info__description text-center"></div><hr><div class="author-info-articles"><a class="author-info-articles__archives article-meta" href="/archives"><span class="pull-left">文章</span><span class="pull-right">16</span></a><a class="author-info-articles__tags article-meta" href="/tags"><span class="pull-left">标签</span><span class="pull-right">25</span></a><a class="author-info-articles__categories article-meta" href="/categories"><span class="pull-left">分类</span><span class="pull-right">12</span></a></div></div></div><div id="content-outer"><div class="no-bg" id="top-container"><div id="page-header"><span class="pull-left"> <a id="site-name" href="/">babyfengfjx'Blog</a></span><i class="fa fa-bars toggle-menu pull-right" aria-hidden="true"></i><span class="pull-right menus">   <a class="site-page" href="/">主页</a><a class="site-page" href="/archives">归档</a><a class="site-page" href="/tags">标签</a><a class="site-page" href="/categories">分类</a></span><span class="pull-right"><a class="site-page social-icon search"><i class="fa fa-search"></i><span> 搜索</span></a></span></div><div id="post-info"><div id="post-title">JMeter基础</div><div id="post-meta"><time class="post-meta__date"><i class="fa fa-calendar" aria-hidden="true"></i> 2019-06-20</time><span class="post-meta__separator">|</span><i class="fa fa-inbox post-meta__icon" aria-hidden="true"></i><a class="post-meta__categories" href="/categories/Jmeter/">Jmeter</a></div></div></div><div class="layout" id="content-inner"><article id="post"><div class="article-container" id="post-content"><h1 id="性能测试基本概念"><a href="#性能测试基本概念" class="headerlink" title="性能测试基本概念"></a>性能测试基本概念</h1><h2 id="RT-Response-time"><a href="#RT-Response-time" class="headerlink" title="RT -Response time"></a>RT -Response time</h2><p>请求响应时间</p>
+<p>从客户端发出请求到得到响应的整个时间</p>
+<p>一般包括网络响应时间+server的响应时间。</p>
+<p>用户接受准则:</p>
+<p>例如2-5-10原则，即按照正常用户体验，如果用户能够在2秒内得到响应，会感觉速度很快，如果2-5秒得到响应，用户感觉系统的响应速度还不多，在5-10秒之内得到响应时，用户会感觉系统的响应速度慢，但是可以接受，超过10秒后还没有响应，用户就会感觉不能够接受。</p>
+<p>不同行业不同业务可接受的响应时间是不同的，一般情况，对于在线实时交易：</p>
+<ul>
+<li>互联网企业：500毫秒以下，例如淘宝业务10毫秒左右。</li>
+<li>金融企业：1秒以下为佳，部分复杂业务3秒以下。</li>
+<li>保险企业：3秒以下为佳。</li>
+<li>制造业：5秒以下为佳。</li>
+<li>阿里云规范</li>
+</ul>
+<h2 id="系统处理能力"><a href="#系统处理能力" class="headerlink" title="系统处理能力"></a><strong>系统处理能力</strong></h2><p>系统处理能力是指系统在利用系统硬件平台和软件平台进行信息处理的能力。系统处理能力通过系统每秒钟能够处理的交易数量来评价，交易有两种理解：</p>
+<ul>
+<li><p>一是业务人员角度的一笔业务过程；</p>
+</li>
+<li><p>二是系统角度的一次交易申请和响应过程。</p>
+</li>
+</ul>
+<p>前者称为业务交易过程，后者称为事务。两种交易指标都可以评价应用系统的处理能力。一般的建议与系统交易日志保持一致，以便于统计业务量或者交易量。系统处理能力指标是技术测试活动中重要指标。</p>
+<h3 id="简称"><a href="#简称" class="headerlink" title="简称"></a><strong>简称</strong></h3><p>一般情况下，用以下几个指标来度量：</p>
+<ul>
+<li><p>HPS（Hits Per Second） ：每秒点击次数，单位是次&#x2F;秒。</p>
+</li>
+<li><p>TPS（Transaction per Second）：系统每秒处理事务数，单位是笔&#x2F;秒。吞吐量。</p>
+<p>不可分割的。要么完全成功，要么完全失败。</p>
+</li>
+<li><p>QPS（Query per Second）：系统每秒处理查询次数，单位是次&#x2F;秒。</p>
+<p>对于互联网业务中，如果某些业务有且仅有一个请求连接，那么TPS&#x3D;QPS&#x3D;HPS，</p>
+<p>一般情况下用TPS来衡量整个业务流程，用QPS来衡量接口查询次数，用HPS来表示对服务器点击请求。</p>
+</li>
+</ul>
+<p>每秒钟处理完的事务次数，一般TPS是对整个系统来讲的。一个应用系统1s能完成多少事务处理，一个事务在分布式处理中，可能会对应多个请求，对于衡量单个接口服务的处理能力，用QPS比较多。</p>
+<h3 id="标准"><a href="#标准" class="headerlink" title="标准"></a><strong>标准</strong></h3><p>无论TPS、QPS、HPS,此指标是衡量系统处理能力非常重要的指标，越大越好，根据经验，一般情况下：</p>
+<ul>
+<li><p>金融行业：1000TPS~9000TPS，不包括互联网化的活动</p>
+</li>
+<li><p>保险行业：100TPS~1000TPS，不包括互联网化的活动</p>
+</li>
+<li><p>制造行业：10TPS~50TPS</p>
+</li>
+<li><p>互联网电子商务：10000TPS~100000TPS,例如天猫5万TPS</p>
+</li>
+<li><p>互联网中型网站：100TPS~500TPS</p>
+</li>
+<li><p>互联网小型网站: 50TPS~100TPS</p>
+</li>
+</ul>
+<h2 id="并发用户数量"><a href="#并发用户数量" class="headerlink" title="并发用户数量"></a>并发用户数量</h2><p>常见的错误理解:</p>
+<p>使用系统的全部用户数量(注册用户)</p>
+<p>使用系统的全部在线用户数量</p>
+<p>正确理解</p>
+<p>并发用户数指在同一时刻内，打开系统并进行业务操作的用户数量，并发用户数对于长连接(数据库连接时长连接，web请求时短连接)系统来说最大并发用户数即是系统的并发接入能力。对于短连接系统而言最大并发用户数并不等于系统的并发接入能力，而是与系统架构、系统处理能力等各种情况相关</p>
+<p>http:请求只能由客户端发出，服务端被动响应。</p>
+<h3 id="简称-1"><a href="#简称-1" class="headerlink" title="简称"></a>简称</h3><p>Virtual User: VU</p>
+<h3 id="标准-1"><a href="#标准-1" class="headerlink" title="标准"></a><strong>标准</strong></h3><p>一般情况下，性能测试是将系统处理能力容量测出来，而不是测试并发用户数，除了服务器长连接可能影响并发用户数外，系统处理能力不完全受并发用户数影响，可以用最小的用户数将系统处理能力容量测试出来，也可以用更多的用户将系统处理能力容量测试出来。</p>
+<p>并发用户数量:</p>
+<p>并发用户多少为好？</p>
+<p>中小企业:5000用户</p>
+<h2 id="错误率"><a href="#错误率" class="headerlink" title="错误率"></a>错误率</h2><h3 id="定义及解释"><a href="#定义及解释" class="headerlink" title="定义及解释"></a>定义及解释</h3><p>错误率指系统在负载情况下，失败交易的概率。错误率＝(失败交易数&#x2F;交易总数)*100%。稳定性较好的系统，其错误率应该由超时引起，即为超时率。</p>
+<h3 id="标准-2"><a href="#标准-2" class="headerlink" title="标准"></a><strong>标准</strong></h3><p>不同系统对错误率的要求不同，但一般不超出千分之六，即成功率不低于99.4%</p>
+<h2 id="CPU"><a href="#CPU" class="headerlink" title="CPU"></a>CPU</h2><h3 id="定义及解释-定义及解释-1-ListParagraph"><a href="#定义及解释-定义及解释-1-ListParagraph" class="headerlink" title="定义及解释 {定义及解释-1 .ListParagraph}"></a><strong>定义及解释</strong> {定义及解释-1 .ListParagraph}</h3><p>中央处理器是一块超大规模的集成电路，是一台计算机的运算核心（Core）和控制核心（ Control Unit）。它的功能主要是解释计算机指令以及处理计算机软件中的数据。CPU Load: 系统正在干活的多少的度量，队列长度。系统平均负载。</p>
+<p>CPU指标主要指的CPU利用率，包括用户态(user)、系统态(sys)、等待态(wait)、空闲态(idle)。CPU 利用率要低于业界警戒值范围之内，即小于或者等于75%;CPU sys%小于或者等于30%, CPU wait%小于或者等于5%。单核CPU也需遵循上述指标要求。</p>
+<p>7*24不允许宕机</p>
+<h2 id="Memory"><a href="#Memory" class="headerlink" title="Memory"></a>Memory</h2><p>内存是计算机中重要的部件之一，它是与CPU进行沟通的桥梁。计算机中所有程序的运行都是在内存中进行的，因此内存的性能对计算机的影响非常大。</p>
+<p>现代的操作系统为了最大利用内存，在内存中存放了缓存，因此内存利用率100%并不代表内存有瓶颈，衡量系统内有有瓶颈主要靠SWAP（与虚拟内存交换）交换空间利用率，一般情况下，SWAP交换空间利用率要低于70%,太多的交换将会引起系统性能低下。</p>
+<p>Swap解释:</p>
+<p>当物理内存接近崩溃时，将物理内存中最近一段时间最少频率使用到的页框移出物理内存，放进该存储空间，这段存储空间我们称之为<strong>交换空间（Swap）</strong></p>
+<h2 id="磁盘吞吐量-Disk-Throughput"><a href="#磁盘吞吐量-Disk-Throughput" class="headerlink" title="磁盘吞吐量 Disk Throughput."></a>磁盘吞吐量 Disk Throughput.</h2><p>磁盘吞吐量是指在无磁盘故障的情况下单位时间内通过磁盘的数据量。</p>
+<p>磁盘指标主要有每秒读写多少兆，磁盘繁忙率，磁盘队列数，平均服务时间，平均等待时间，空间利用率。其中磁盘繁忙率是直接反映磁盘是否有瓶颈的的重要依据，一般情况下，磁盘繁忙率要低于70%。</p>
+<h2 id="网络吞吐量-Network-Throughput"><a href="#网络吞吐量-Network-Throughput" class="headerlink" title="网络吞吐量 Network Throughput"></a>网络吞吐量 Network Throughput</h2><p><strong>10Mbit带宽，每秒传输的字节数1.25MBytes</strong></p>
+<p>网络吞吐量是指在无网络故障的情况下单位时间内通过的网络的数据数量。单位为Byte&#x2F;s。网络吞吐量指标用于衡量系统对于网络设备或链路传输能力的需求。当网络吞吐量指标接近网络设备或链路最大传输能力时，则需要考虑升级网络设备。</p>
+<p>网络吞吐量指标主要有每秒有多少兆流量进出，一般情况下不能超过设备或链路最大传输能力的70%。</p>
+<h1 id="性能测试基本流程"><a href="#性能测试基本流程" class="headerlink" title="性能测试基本流程"></a>性能测试基本流程</h1><p><img src="/pictures/08JMeter/image-20230103174138051.png" alt="image-20230103174138051"></p>
+<p>性能测试需求:</p>
+<ol>
+<li><p>最终用户体验，例如2-5-10原则，即按照正常用户体验，如果用户能够在2秒内得到响应，会感觉速度很快，如果2-5秒得到响应，用户感觉系统的响应速度还不多，在5-10秒之内得到响应时，用户会感觉系统的响应速度慢，但是可以接受，超过10秒后还没有响应，用户就会感觉不能够接受。</p>
+</li>
+<li><p>技术需求, cpu，内存，网络吞吐量，磁盘吞吐量</p>
+</li>
+<li><p>标准要求:</p>
+<p>竞品分析-</p>
+<p>响应时间</p>
+</li>
+</ol>
+<ul>
+<li><p>互联网企业：500毫秒以下，例如淘宝业务10毫秒左右。</p>
+</li>
+<li><p>金融企业：1秒以下为佳，部分复杂业务3秒以下。</p>
+</li>
+<li><p>保险企业：3秒以下为佳。</p>
+</li>
+<li><p>制造业：5秒以下为佳。</p>
+<p>TPS</p>
+</li>
+<li><p>金融行业：1000TPS~9000TPS，不包括互联网化的活动</p>
+</li>
+<li><p>保险行业：100TPS~1000TPS，不包括互联网化的活动</p>
+</li>
+<li><p>制造行业：10TPS~50TPS</p>
+</li>
+<li><p>互联网电子商务：10000TPS~100000TPS,例如天猫5万TPS</p>
+</li>
+<li><p>互联网中型网站：100TPS~500TPS</p>
+</li>
+<li><p>互联网小型网站: 50TPS~100TPS</p>
+<p>性能测试计划</p>
+</li>
+</ul>
+<p>测试环境，测试需求，测试方法，测试时间表，测试组织架构，测试风险，输入输出文档</p>
+<p>性能测试步骤:</p>
+<p><img src="/pictures/08JMeter/image-20230103174223823.png"></p>
+<p>性能测试执行</p>
+<p><img src="/pictures/08JMeter/image-20230103174207519.png"></p>
+<h1 id="性能测试工具"><a href="#性能测试工具" class="headerlink" title="性能测试工具"></a>性能测试工具</h1><p><img src="/pictures/08JMeter/image-20230103174236971.png"></p>
+<h1 id="Jmeter简介"><a href="#Jmeter简介" class="headerlink" title="Jmeter简介"></a>Jmeter简介</h1><h2 id="Jmeter的基本概念"><a href="#Jmeter的基本概念" class="headerlink" title="Jmeter的基本概念"></a>Jmeter的基本概念</h2><p>Apache JMeter是Apache组织开发的基于Java的压力测试工具。用于对软件做压力测试，它最初被设计用于Web应用测试，但后来扩展到其他测试领域。 它可以用于测试静态和动态资源，例如静态文件、Java 小服务程序、CGI 脚本、Java 对象、数据库、FTP 服务器， 等等。JMeter 可以用于对服务器、网络或对象模拟巨大的负载，来自不同压力类别下测试它们的强度和分析整体性能。另外，JMeter能够对应用程序做功能&#x2F;回归测试，通过创建带有断言的脚本来验证你的程序返回了你期望的结果。为了最大限度的灵活性，JMeter允许使用正则表达式创建断言</p>
+<h2 id="我们为什么使用Jmeter"><a href="#我们为什么使用Jmeter" class="headerlink" title="我们为什么使用Jmeter"></a>我们为什么使用Jmeter</h2><p>开源免费还很好用，基于Java编写，可集成到其他系统可拓展各个功能插件</p>
+<p>支持接口测试，压力（负载和压力）测试等多种功能，支持录制回放，入门简单</p>
+<p>相较于自己编写框架活其他开源工具，有较为完善的UI界面，便于接口调试</p>
+<p>多平台支持，可在Linux，Windows，Mac上运行</p>
+<h1 id="Jmeter安装配置及目录结构"><a href="#Jmeter安装配置及目录结构" class="headerlink" title="Jmeter安装配置及目录结构"></a>Jmeter安装配置及目录结构</h1><h2 id="Windows下Jmeter下载安装"><a href="#Windows下Jmeter下载安装" class="headerlink" title="Windows下Jmeter下载安装"></a>Windows下Jmeter下载安装</h2><p><a target="_blank" rel="noopener" href="http://jmeter.apache.org/download_jmeter.cgi">登录官网</a> ，根据自己平台，下载对应文件</p>
+<p><img src="/pictures/08JMeter/image-20230103174419336.png"></p>
+<p><img src="/pictures/08JMeter/image-20230103174430456.png"></p>
+<p><img src="/pictures/08JMeter/image-20230103174437006.png"></p>
+<p>安装JDK，配置环境变量（具体步骤不做介绍）</p>
+<p>将下载Jmeter文件解压，打开&#x2F;bin&#x2F;jmeter.bat</p>
+<p><img src="/pictures/08JMeter/image-20230103174557321.png"></p>
+<p><img src="/pictures/08JMeter/image-20230103174657692.png"></p>
+<h2 id="Jmeter的目录结构"><a href="#Jmeter的目录结构" class="headerlink" title="Jmeter的目录结构"></a>Jmeter的目录结构</h2><p>SourceURL:file:&#x2F;&#x2F;&#x2F;home&#x2F;babyfengfjx&#x2F;Downloads&#x2F;JMeter操作手册大全.docx</p>
+<p>&#x2F;bin 目录（常用文件介绍）</p>
+<p>examples：目录下包含Jmeter使用实例</p>
+<p>ApacheJMeter.jar：JMeter源码包</p>
+<p>jmeter.bat：windows下启动文件</p>
+<p>jmeter.sh：Linux下启动文件</p>
+<p>jmeter.log：Jmeter运行日志文件</p>
+<p>jmeter.properties：Jmeter配置文件</p>
+<p>jmeter-server.bat：windows下启动负载生成器服务文件</p>
+<p>jmeter-server：Linux下启动负载生成器文件</p>
+<p>&#x2F;docs目录——Jmeter帮助文档</p>
+<p>&#x2F;extras目录——提供了对Ant的支持文件，可也用于持续集成</p>
+<p>&#x2F;lib目录——存放Jmeter依赖的jar包，同时安装插件也放于此目录</p>
+<p>&#x2F;licenses目录——软件许可文件，不用管</p>
+<p>&#x2F;printable_docs目录——Jmeter用户手册</p>
+<h1 id="Jmeter简单入门"><a href="#Jmeter简单入门" class="headerlink" title="Jmeter简单入门"></a>Jmeter简单入门</h1><h2 id="修改语言"><a href="#修改语言" class="headerlink" title="修改语言"></a>修改语言</h2><p><img src="/pictures/08JMeter/image-20230103174825289.png"></p>
+<h2 id="创建测试计划"><a href="#创建测试计划" class="headerlink" title="创建测试计划"></a>创建测试计划</h2><p><img src="/pictures/08JMeter/image-20230103174843945.png"></p>
+<h2 id="添加线程组"><a href="#添加线程组" class="headerlink" title="添加线程组"></a>添加线程组</h2><p><img src="/pictures/08JMeter/image-20230103174901916.png"></p>
+<h2 id="添加sampler设置http请求"><a href="#添加sampler设置http请求" class="headerlink" title="添加sampler设置http请求"></a>添加sampler设置http请求</h2><p><img src="/pictures/08JMeter/image-20230103175006565.png"></p>
+<h2 id="添加结果树"><a href="#添加结果树" class="headerlink" title="添加结果树"></a>添加结果树</h2><p><img src="/pictures/08JMeter/image-20230103175024887.png"></p>
+<h2 id="查看结果"><a href="#查看结果" class="headerlink" title="查看结果"></a>查看结果</h2><p><img src="/pictures/08JMeter/image-20230103175048590.png"></p>
+<h1 id="测试计划"><a href="#测试计划" class="headerlink" title="测试计划"></a>测试计划</h1><p><img src="/pictures/08JMeter/image-20230103175428021.png"></p>
+<p>独立运行每个线程组：</p>
+<p>再每一组运行结束后启动下一个</p>
+<p>Run tearDown Thread Groups after shutdown of main threads：  </p>
+<p>主线程关闭运行后拆除线程组，</p>
+<h1 id="线程组"><a href="#线程组" class="headerlink" title="线程组"></a>线程组</h1><p><img src="/pictures/08JMeter/image-20230104092545954.png"></p>
+<p>Delay Thread creation until needed         <br>      延迟创建线程，直到该线程开始采样，即之后的任何线程组延迟和加速时间为线程本身。这样可以支持更多的线程，但不会有太多是同时处于活动状态。</p>
+<p> 持续时间（秒）：测试计划持续多长时间，会覆盖结束时间。</p>
+<p> 启动延迟（秒）：测试计划延迟多长时间启动，会覆盖启动时间。</p>
+<h1 id="Sampler-HTTP请求"><a href="#Sampler-HTTP请求" class="headerlink" title="Sampler --HTTP请求"></a>Sampler --HTTP请求</h1><p><img src="/pictures/08JMeter/image-20230104092628654.png"></p>
+<p>请求方式</p>
+<p>请求路径</p>
+<p>请求ip</p>
+<p>请求协议</p>
+<p>请求编码</p>
+<p><img src="/pictures/08JMeter/image-20230104092652159.png"></p>
+<p>重定向之前的和之后的请求都会在结果树中显示出来</p>
+<p><img src="/pictures/08JMeter/image-20230104092707205.png"></p>
+<p>自动重定向，只会显示重定向之后的地址。</p>
+<p><img src="/pictures/08JMeter/image-20230104092735864.png"></p>
+<h1 id="结果收集"><a href="#结果收集" class="headerlink" title="结果收集"></a>结果收集</h1><h2 id="查看结果树"><a href="#查看结果树" class="headerlink" title="查看结果树"></a>查看结果树</h2><p><img src="/pictures/08JMeter/image-20230104092807270.png"></p>
+<h2 id="表格查看结果"><a href="#表格查看结果" class="headerlink" title="表格查看结果"></a>表格查看结果</h2><p><img src="/pictures/08JMeter/image-20230104092825613.png"></p>
+<p>偏离表示服务器响应时间变化、离散程度测量值的大小，或者，换句话说，就是数据的分布。</p>
+<h2 id="聚合报告"><a href="#聚合报告" class="headerlink" title="聚合报告"></a>聚合报告</h2><p><img src="/pictures/08JMeter/image-20230104092842121.png"></p>
+<h2 id="Summary-Report"><a href="#Summary-Report" class="headerlink" title="Summary Report"></a>Summary Report</h2><p><img src="/pictures/08JMeter/image-20230104092857441.png"></p>
+<h1 id="Jmeter参数化"><a href="#Jmeter参数化" class="headerlink" title="Jmeter参数化"></a>Jmeter参数化</h1><h2 id="用户定义的变量"><a href="#用户定义的变量" class="headerlink" title="用户定义的变量"></a>用户定义的变量</h2><p>使用配置原件中用户定义的变量可以进行参数化</p>
+<p><img src="/pictures/08JMeter/image-20230104092916211.png"></p>
+<h2 id="用户参数"><a href="#用户参数" class="headerlink" title="用户参数"></a>用户参数</h2><p>使用前置管理器设置用户参数</p>
+<p><img src="/pictures/08JMeter/image-20230104092938544.png"></p>
+<h2 id="使用csv配置原件"><a href="#使用csv配置原件" class="headerlink" title="使用csv配置原件"></a>使用csv配置原件</h2><p>配置元件(Config Element)维护Sampler需要的配置信息，并根据实际的需要会修改请求的内容。我们主要在参数化中用到CSV Data Set Config<img src="/pictures/08JMeter/image-20230104092956569.png"></p>
+<h2 id="使用随机函数助手"><a href="#使用随机函数助手" class="headerlink" title="使用随机函数助手"></a>使用随机函数助手</h2><h3 id="生成随机字符串"><a href="#生成随机字符串" class="headerlink" title="生成随机字符串"></a>生成随机字符串</h3><p><img src="/pictures/08JMeter/image-20230104093024788.png"></p>
+<h3 id="生成随机数字"><a href="#生成随机数字" class="headerlink" title="生成随机数字"></a>生成随机数字</h3><p><img src="/pictures/08JMeter/image-20230104094422449.png"></p>
+<h3 id="参数引用"><a href="#参数引用" class="headerlink" title="参数引用"></a>参数引用</h3><p><img src="/pictures/08JMeter/image-20230104094437099.png"></p>
+<h1 id="Jmeter断言-检查点"><a href="#Jmeter断言-检查点" class="headerlink" title="Jmeter断言--检查点"></a>Jmeter断言--检查点</h1><p>断言(Assertions)可以用来判断请求响应的结果是否如用户所期望的。它可以用来隔离问题域，即在确保功能正确的前提下执行压力测试。这个限制对于有效的测试是非常有用的。</p>
+<p>设置响应内容监听</p>
+<p><img src="/pictures/08JMeter/image-20230104094455677.png"></p>
+<p>设置响应头断言</p>
+<p><img src="/pictures/08JMeter/image-20230104094516722.png"></p>
+<h1 id="Jmeter定时器"><a href="#Jmeter定时器" class="headerlink" title="Jmeter定时器"></a>Jmeter定时器</h1><h2 id="固定定时器"><a href="#固定定时器" class="headerlink" title="固定定时器"></a>固定定时器</h2><p>定时器(Timer)负责定义请求之间的延迟间隔</p>
+<p><img src="/pictures/08JMeter/image-20230104094539586.png"></p>
+<h2 id="高斯定时器"><a href="#高斯定时器" class="headerlink" title="高斯定时器"></a>高斯定时器</h2><p><img src="/pictures/08JMeter/image-20230104094605360.png"></p>
+<h2 id="同步定时器（Synchronizing-Timer）"><a href="#同步定时器（Synchronizing-Timer）" class="headerlink" title="同步定时器（Synchronizing Timer）"></a><strong>同步定时器（Synchronizing Timer）</strong></h2><p><img src="/pictures/08JMeter/image-20230104094622810.png"></p>
+<h1 id="Jmeter配置原件"><a href="#Jmeter配置原件" class="headerlink" title="Jmeter配置原件"></a>Jmeter配置原件</h1><h2 id="HTTP-Cookie管理器"><a href="#HTTP-Cookie管理器" class="headerlink" title="HTTP Cookie管理器"></a>HTTP Cookie管理器</h2><p>默认保存cookie信息</p>
+<p><img src="/pictures/08JMeter/image-20230104094646033.png"></p>
+<h2 id="HTTP信息头管理器"><a href="#HTTP信息头管理器" class="headerlink" title="HTTP信息头管理器"></a>HTTP信息头管理器</h2><p>默认保存常规的请求头</p>
+<p><img src="/pictures/08JMeter/image-20230104094701081.png"></p>
+<h2 id="HTTP-Cache管理器"><a href="#HTTP-Cache管理器" class="headerlink" title="HTTP Cache管理器"></a>HTTP Cache管理器</h2><p>默认管理http请求缓存的信息</p>
+<p><img src="/pictures/08JMeter/image-20230104094718002.png"></p>
+<h2 id="HTTP-请求默认值"><a href="#HTTP-请求默认值" class="headerlink" title="HTTP 请求默认值"></a>HTTP 请求默认值</h2><p>可以设置http请求的默认值，在单个的请求中不需要再设置其他内容</p>
+<p><img src="/pictures/08JMeter/image-20230104094737517.png"></p>
+<h1 id="Jmeter逻辑控制器"><a href="#Jmeter逻辑控制器" class="headerlink" title="Jmeter逻辑控制器"></a>Jmeter逻辑控制器</h1><h2 id="简单控制器"><a href="#简单控制器" class="headerlink" title="简单控制器"></a>简单控制器</h2><p>作用：这是Jmeter里最简单的一个控制器，它可以让我们组织我们的采样器和其它的逻辑控制器（分组功能），提供一个块的结构和控制，并不具有任何的逻辑控制或运行时的功能。</p>
+<p><img src="/pictures/08JMeter/image-20230104094756958.png"></p>
+<p><img src="/pictures/08JMeter/image-20230104094816885.png"></p>
+<h2 id="循环控制器"><a href="#循环控制器" class="headerlink" title="循环控制器"></a>循环控制器</h2><p>在之前基础上再去循环,线程10,迭代1,一共十次,放到循环控制器可以多次x请求,用于在某一组中对哪些请求循环执行</p>
+<p><img src="/pictures/08JMeter/image-20230104094909398.png"></p>
+<p><img src="/pictures/08JMeter/image-20230104094926170.png"></p>
+<h2 id="事务控制器"><a href="#事务控制器" class="headerlink" title="事务控制器"></a>事务控制器</h2><p>在线程组下创建事务控制器</p>
+<p><img src="/pictures/08JMeter/image-20230104094947187.png"></p>
+<p>创建sample 访问首页和注册页面,放到事务中</p>
+<p><img src="/pictures/08JMeter/image-20230104095110900.png"></p>
+<h1 id="Jmeter关联-后置处理器"><a href="#Jmeter关联-后置处理器" class="headerlink" title="Jmeter关联-后置处理器"></a>Jmeter关联-后置处理器</h1><h2 id="正则表达式提取"><a href="#正则表达式提取" class="headerlink" title="正则表达式提取"></a>正则表达式提取</h2><p><img src="/pictures/08JMeter/image-20230104095127103.png"></p>
+<p><strong>位置1</strong>：名称及注释</p>
+<p><strong>位置2</strong>：正则表达式提取内容的范围。（关于各字段的详细说明请查阅协议的相关说明）</p>
+<p><strong>位置3</strong>：正则表达式提取的相关设置</p>
+<ul>
+<li><p><strong>引用名称</strong>：自己定义的变量名称，后续<strong>请求</strong>将要引用到的<strong>变量名</strong>,如填写的是：user_id，后面的引用方式是${user_id}</p>
+</li>
+<li><p><strong>正则表达式</strong>：提取内容的正则表达式，相当于lr中的关联函数</p>
+</li>
+<li><p>()     括起来的部分就是需要提取的，对于你要提的内容需要用小括号括起来</p>
+</li>
+<li><p>.    点号表示匹配任何字符串</p>
+</li>
+<li><p>+   一次或多次</p>
+</li>
+<li><p>？   在找到第一个匹配项后停止</p>
+</li>
+<li><p><strong>模板</strong>：用$$引用起来，如果在正则表达式中有多个正则表达式（多个括号括起来的东东），则可以是$2$，$3$等等，表示解析到的第几个值给user_id。例如：$1$表示匹配到的第一个值</p>
+</li>
+<li><p><strong>匹配数字</strong>：0代表随机取值，-1代表所有值，此时提取结果是一个数组，其余正整数代表第几个匹配的内容提取出来。如果匹配数字选择的是-1，还可以通过${user_id_1}的方式来取第1个匹配的内容，${user_id_2}来取第2个匹配的内容。 </p>
+</li>
+<li><p>缺省值：正则匹配失败时，取的值</p>
+</li>
+</ul>
+<h2 id="使用debug-Sampler获取参数的名称"><a href="#使用debug-Sampler获取参数的名称" class="headerlink" title="使用debug Sampler获取参数的名称"></a>使用debug Sampler获取参数的名称</h2><p><img src="/pictures/08JMeter/image-20230104095144838.png"></p>
+<h2 id="参数化获取参数内容"><a href="#参数化获取参数内容" class="headerlink" title="参数化获取参数内容"></a>参数化获取参数内容</h2><p><img src="/pictures/08JMeter/image-20230104095202731.png"></p>
+<h1 id="元件的执行顺序"><a href="#元件的执行顺序" class="headerlink" title="元件的执行顺序"></a>元件的执行顺序</h1><p><img src="/pictures/08JMeter/image-20230104095219503.png"></p>
+<p>顺序:</p>
+<p>HTTP Cookie管理器</p>
+<p>HTTP Cache Manager</p>
+<p>HTTP 信息头管理器</p>
+<p>HTTP 请求默认值</p>
+<p>用户参数</p>
+<p>固定定时器</p>
+<p>简单控制器</p>
+<p>第一个请求</p>
+<p>HTTP Cookie管理器</p>
+<p>HTTP Cache Manager</p>
+<p>HTTP 信息头管理器</p>
+<p>HTTP 请求默认值</p>
+<p>用户参数</p>
+<p>固定定时器</p>
+<p>第二个请求</p>
+<p>响应断言</p>
+<p>正则表达式提取器</p>
+<p>查看结果树</p>
+<h1 id="Jmeter添加插件"><a href="#Jmeter添加插件" class="headerlink" title="Jmeter添加插件"></a>Jmeter添加插件</h1><p>Jmeter本身是不能够展示内存，cpu和吞吐量的，但是可以通过添加插件的方式来对jmeter添加这些功能</p>
+<p><img src="/pictures/08JMeter/image-20230104095234652.png"></p>
+<h2 id="打开Jmeter，查看是否有插件管理器"><a href="#打开Jmeter，查看是否有插件管理器" class="headerlink" title="打开Jmeter，查看是否有插件管理器"></a>打开Jmeter，查看是否有插件管理器</h2><p><img src="/pictures/08JMeter/image-20230104095258849.png"></p>
+<p><img src="/pictures/08JMeter/image-20230104095321272.png"></p>
+<p>不一定一次成功</p>
+<h2 id="场景控制插件"><a href="#场景控制插件" class="headerlink" title="场景控制插件"></a>场景控制插件</h2><h3 id="Stepping-Thread-Group"><a href="#Stepping-Thread-Group" class="headerlink" title="Stepping Thread Group"></a>Stepping Thread Group</h3><p><img src="/pictures/08JMeter/image-20230104095409344.png"></p>
+<h3 id="设置启动场景"><a href="#设置启动场景" class="headerlink" title="设置启动场景"></a>设置启动场景</h3><p><img src="/pictures/08JMeter/image-20230104095421303.png"></p>
+<h2 id="结果监听插件"><a href="#结果监听插件" class="headerlink" title="结果监听插件"></a>结果监听插件</h2><p><img src="/pictures/08JMeter/image-20230104095440597.png"></p>
+<p><img src="/pictures/08JMeter/image-20230104095453077.png"></p>
+<p><img src="/pictures/08JMeter/image-20230104095511561.png"></p>
+<p><img src="/pictures/08JMeter/image-20230104095533363.png"></p>
+<p><img src="/pictures/08JMeter/image-20230104095917593.png"></p>
+<p><img src="/pictures/08JMeter/image-20230104095932798.png"></p>
+<p><img src="/pictures/08JMeter/image-20230104100053253.png"></p>
+<h1 id="Jmeter脚本录制"><a href="#Jmeter脚本录制" class="headerlink" title="Jmeter脚本录制"></a>Jmeter脚本录制</h1><h2 id="什么是脚本录制"><a href="#什么是脚本录制" class="headerlink" title="什么是脚本录制"></a>什么是脚本录制</h2><p>在进行测试的时候，可能有好多脚本或者界面需要操作测试，并且有些测试链接需要重复多线程高并发进行测试，我们一般会针对这一些操作，进行一个脚本录制，录制好之后，之后测试就可以在这个基础上进行测试。</p>
+<h2 id="Jemeter脚本录制方式"><a href="#Jemeter脚本录制方式" class="headerlink" title="Jemeter脚本录制方式"></a>Jemeter脚本录制方式</h2><p>BadBoy脚本录制</p>
+<p>使用Jmeter自带的代理服务器进行脚本录制</p>
+<h1 id="使用Jmeter自带的代理服务器进行脚本录制"><a href="#使用Jmeter自带的代理服务器进行脚本录制" class="headerlink" title="使用Jmeter自带的代理服务器进行脚本录制"></a>使用Jmeter自带的代理服务器进行脚本录制</h1><h2 id="在测试计划上创建线程组"><a href="#在测试计划上创建线程组" class="headerlink" title="在测试计划上创建线程组"></a>在测试计划上创建线程组</h2><p><img src="/pictures/08JMeter/image-20230104100121708.png"></p>
+<h2 id="添加录制控制器"><a href="#添加录制控制器" class="headerlink" title="添加录制控制器"></a>添加录制控制器</h2><p><img src="/pictures/08JMeter/image-20230104100133886.png" alt="image-20230104100133886"></p>
+<h2 id="在工作台上添加http代理服务器"><a href="#在工作台上添加http代理服务器" class="headerlink" title="在工作台上添加http代理服务器"></a>在工作台上添加http代理服务器</h2><p><img src="/pictures/08JMeter/image-20230104100207529.png"></p>
+<h2 id="配置Http代理服务器"><a href="#配置Http代理服务器" class="headerlink" title="配置Http代理服务器"></a>配置Http代理服务器</h2><p><img src="/pictures/08JMeter/image-20230104100221519.png"></p>
+<h2 id="配置浏览器"><a href="#配置浏览器" class="headerlink" title="配置浏览器"></a>配置浏览器</h2><h3 id="Google浏览器"><a href="#Google浏览器" class="headerlink" title="Google浏览器"></a>Google浏览器</h3><p><img src="/pictures/08JMeter/image-20230104100253418.png"></p>
+<p><img src="/pictures/08JMeter/image-20230104100306738.png"></p>
+<p><img src="/pictures/08JMeter/image-20230104100329839.png"></p>
+<h3 id="火狐浏览器"><a href="#火狐浏览器" class="headerlink" title="火狐浏览器"></a>火狐浏览器</h3><p><img src="/pictures/08JMeter/image-20230104100347408.png"></p>
+<p><img src="/pictures/08JMeter/image-20230104100355679.png"></p>
+<h2 id="浏览器请求测试"><a href="#浏览器请求测试" class="headerlink" title="浏览器请求测试"></a>浏览器请求测试</h2><p><img src="/pictures/08JMeter/image-20230104100426913.png"></p>
+<h2 id="过滤信息"><a href="#过滤信息" class="headerlink" title="过滤信息"></a>过滤信息</h2><p>添加如下内容</p>
+<p>.*\.js.*|.*\.css.*|.*\.png.*|.*\.jpg.*|.*\.gif.*|.*\.bmp.*</p>
+<p><img src="/pictures/08JMeter/image-20230104100447101.png"></p>
+<p><img src="/pictures/08JMeter/image-20230104100500830.png"></p>
+<h1 id="Android手机端脚本录制"><a href="#Android手机端脚本录制" class="headerlink" title="Android手机端脚本录制"></a>Android手机端脚本录制</h1><h2 id="查看电脑IP"><a href="#查看电脑IP" class="headerlink" title="查看电脑IP"></a>查看电脑IP</h2><p><img src="/pictures/08JMeter/image-20230104100513719.png"></p>
+<h2 id="配置手机网路连接"><a href="#配置手机网路连接" class="headerlink" title="配置手机网路连接"></a>配置手机网路连接</h2><p><img src="/pictures/08JMeter/image-20230104100534974.png"></p>
+<p><img src="/pictures/08JMeter/image-20230104100600278.png"></p>
+<h2 id="手机访问app"><a href="#手机访问app" class="headerlink" title="手机访问app"></a>手机访问app</h2><p><img src="/pictures/08JMeter/image-20230104100620418.png"></p>
+<p><img src="/pictures/08JMeter/image-20230104100635987.png"></p>
+<h2 id="模拟登陆操作"><a href="#模拟登陆操作" class="headerlink" title="模拟登陆操作"></a>模拟登陆操作</h2><p><img src="/pictures/08JMeter/image-20230104100650698.png"></p>
+<p><img src="/pictures/08JMeter/image-20230104100705102.png"></p>
+<h2 id="执行结束之后，停止脚本录制"><a href="#执行结束之后，停止脚本录制" class="headerlink" title="执行结束之后，停止脚本录制"></a>执行结束之后，停止脚本录制</h2><p><img src="/pictures/08JMeter/image-20230104100722577.png"></p>
+<h2 id="脚本测试-线程组设置10个线程分别请求10次"><a href="#脚本测试-线程组设置10个线程分别请求10次" class="headerlink" title="脚本测试-线程组设置10个线程分别请求10次"></a>脚本测试-线程组设置10个线程分别请求10次</h2><p><img src="/pictures/08JMeter/image-20230104100737832.png"></p>
+<h2 id="查看结果树-1"><a href="#查看结果树-1" class="headerlink" title="查看结果树"></a>查看结果树</h2><p><img src="/pictures/08JMeter/image-20230104100757522.png"></p>
+<h1 id="BadBoy脚本录制"><a href="#BadBoy脚本录制" class="headerlink" title="BadBoy脚本录制"></a>BadBoy脚本录制</h1><h2 id="安装badboy脚本软件"><a href="#安装badboy脚本软件" class="headerlink" title="安装badboy脚本软件"></a>安装badboy脚本软件</h2><p>傻瓜式安装即可</p>
+<h2 id="打开badboy软件"><a href="#打开badboy软件" class="headerlink" title="打开badboy软件"></a>打开badboy软件</h2><p><img src="/pictures/08JMeter/image-20230104100818008.png"></p>
+<h2 id="badboy脚本录制"><a href="#badboy脚本录制" class="headerlink" title="badboy脚本录制"></a>badboy脚本录制</h2><p>点击录制按钮进行脚本录制，完成打开搜狗搜索，搜索zhiyuan0932操作，然后停止，回放，（回放的时候，会因为编码原因导致乱码，需要手动调乱码问题）</p>
+<p><img src="/pictures/08JMeter/image-20230104100832454.png"></p>
+<p><img src="/pictures/08JMeter/image-20230104100856535.png"></p>
+<p><img src="/pictures/08JMeter/image-20230104100908487.png"></p>
+<p><img src="/pictures/08JMeter/image-20230104100917874.png"></p>
+<h2 id="添加验证点"><a href="#添加验证点" class="headerlink" title="添加验证点"></a>添加验证点</h2><p>验证点的作用就是验证脚本是否按照我们测试的思路执行，判断脚本执行过程中是否存现问题</p>
+<p><img src="/pictures/08JMeter/image-20230104100933098.png"></p>
+<h2 id="badboy参数化"><a href="#badboy参数化" class="headerlink" title="badboy参数化"></a>badboy参数化</h2><p>所谓参数化，是指请求的某个参数提前设定多个值，在具体请求的时候，去获取提前设定的值，不同的业务场景设置的参数不一致。</p>
+<p><img src="/pictures/08JMeter/image-20230104100952874.png"></p>
+<p><img src="/pictures/08JMeter/image-20230104101000440.png"></p>
+<p><img src="/pictures/08JMeter/image-20230104101007977.png"></p>
+<p><img src="/pictures/08JMeter/image-20230104101015465.png"></p>
+<h2 id="导出Jmeter脚本"><a href="#导出Jmeter脚本" class="headerlink" title="导出Jmeter脚本"></a>导出Jmeter脚本</h2><p><img src="/pictures/08JMeter/image-20230104101031073.png"></p>
+<h2 id="在Jmeter中导入badboy生成的脚本，验证测试"><a href="#在Jmeter中导入badboy生成的脚本，验证测试" class="headerlink" title="在Jmeter中导入badboy生成的脚本，验证测试"></a>在Jmeter中导入badboy生成的脚本，验证测试</h2><p><img src="/pictures/08JMeter/image-20230104101040623.png"></p>
+<h2 id="badboy并发测试"><a href="#badboy并发测试" class="headerlink" title="badboy并发测试"></a>badboy并发测试</h2><p>本身是能做接口测试和压力测试的,并且能兼容jemeter</p>
+<p>选择tools run background</p>
+<p><img src="/pictures/08JMeter/image-20230104101050000.png"></p>
+<h2 id="badboy测试报告"><a href="#badboy测试报告" class="headerlink" title="badboy测试报告"></a>badboy测试报告</h2><p>在badboy--&gt;view---&gt;report下可以看到测试报告</p>
+<p><img src="/pictures/08JMeter/image-20230104101059830.png"></p>
+<h1 id="Jmeter数据库压力测试"><a href="#Jmeter数据库压力测试" class="headerlink" title="Jmeter数据库压力测试"></a>Jmeter数据库压力测试</h1><h2 id="先配置jdbc驱动"><a href="#先配置jdbc驱动" class="headerlink" title="先配置jdbc驱动"></a>先配置jdbc驱动</h2><p><img src="/pictures/08JMeter/image-20230104101134264.png"></p>
+<p>添加上jar后,在测试计划添加配置原件,jdbc进行配置</p>
+<p><img src="/pictures/08JMeter/image-20230104101200409.png"></p>
+<p>添加操作数据库请求 samplerjdbcRequest</p>
+<h2 id="数据库普通查询操作"><a href="#数据库普通查询操作" class="headerlink" title="数据库普通查询操作"></a>数据库普通查询操作</h2><p><img src="/pictures/08JMeter/image-20230104101354190.png"></p>
+<h2 id="Jmeter预编译参数查询方式"><a href="#Jmeter预编译参数查询方式" class="headerlink" title="Jmeter预编译参数查询方式"></a>Jmeter预编译参数查询方式</h2><p><img src="/pictures/08JMeter/image-20230104101402444.png"></p>
+<h2 id="ForEach控制器循环请求"><a href="#ForEach控制器循环请求" class="headerlink" title="ForEach控制器循环请求"></a>ForEach控制器循环请求</h2><p><img src="/pictures/08JMeter/image-20230104101410482.png"></p>
+<h2 id="JDBC预编译方式修改数据"><a href="#JDBC预编译方式修改数据" class="headerlink" title="JDBC预编译方式修改数据"></a>JDBC预编译方式修改数据</h2><h3 id="配置csv文件"><a href="#配置csv文件" class="headerlink" title="配置csv文件"></a>配置csv文件</h3><p><img src="/pictures/08JMeter/image-20230104101419180.png"></p>
+<h3 id="修改数据"><a href="#修改数据" class="headerlink" title="修改数据"></a>修改数据</h3><p><img src="/pictures/08JMeter/image-20230104101428004.png"></p>
+<h1 id="Jmeter压测接口的性能优化"><a href="#Jmeter压测接口的性能优化" class="headerlink" title="Jmeter压测接口的性能优化"></a>Jmeter压测接口的性能优化</h1><p>简介：讲解Jmeter压测减少资源使用的一些建议，即压测结果更准确</p>
+<p>1、使用非GUI模式：jmeter -n -t test.jmx -l result.jtl</p>
+<p>2、少使用Listener， 如果使用-l参数，它们都可以被删除或禁用。</p>
+<p>3、在加载测试期间不要使用”查看结果树”或”查看结果”表监听器，只能在脚本阶段使用它们来调试脚本。</p>
+<p>4、包含控制器在这里没有帮助，因为它将文件中的所有测试元素添加到测试计划中。</p>
+<p>5、不要使用功能模式,使用CSV输出而不是XML</p>
+<p>6、只保存你需要的数据,尽可能少地使用断言</p>
+<p>7、如果测试需要大量数据，可以提前准备好测试数据放到数据文件中，以CSV Read方式读取。</p>
+<p>8、用内网压测，减少其他带宽影响压测结果</p>
+<p>9、如果压测大流量，尽量用多几个节点以非GUI模式向服务器施压</p>
+<h1 id="Linux下运行jmeter压测"><a href="#Linux下运行jmeter压测" class="headerlink" title="Linux下运行jmeter压测"></a>Linux下运行jmeter压测</h1><p>我们在做测试的时候，有时候要运行很久，公司用的测试服务器一般都是linux，就可以运行在linux下面，linux下面不能像windows一样有图形化界面，那怎么运行脚本呢。</p>
+<h2 id="解压JDK8到Linux"><a href="#解压JDK8到Linux" class="headerlink" title="解压JDK8到Linux"></a>解压JDK8到Linux</h2><p>tar -xvf jdk-8u171-linux-i586.tar.gz -C &#x2F;usr&#x2F;local</p>
+<p>mv jdk-8u171-linux-i586 java</p>
+<p><img src="/pictures/08JMeter/image-20230104101441890.png"></p>
+<h2 id="配置环境变量"><a href="#配置环境变量" class="headerlink" title="配置环境变量"></a>配置环境变量</h2><p>[root@localhost &#x2F;]# vim &#x2F;etc&#x2F;profile</p>
+<p>+———————————-+<br>| JAVA_HOME&#x3D;&#x2F;usr&#x2F;local&#x2F;java&#x2F;      |<br>|                                  |<br>| CLASSPATH&#x3D;$JAVA_HOME&#x2F;lib&#x2F;      |<br>|                                  |<br>| PATH&#x3D;$PATH:$JAVA_HOME&#x2F;bin     |<br>|                                  |<br>| export PATH JAVA_HOME CLASSPATH |<br>+———————————-+</p>
+<h2 id="刷新配置文件"><a href="#刷新配置文件" class="headerlink" title="刷新配置文件"></a>刷新配置文件</h2><p>source &#x2F;etc&#x2F;profile</p>
+<p>java -version</p>
+<h2 id="解压并安装jmeter4-0"><a href="#解压并安装jmeter4-0" class="headerlink" title="解压并安装jmeter4.0"></a>解压并安装jmeter4.0</h2><h2 id="配置jmeter环境变量"><a href="#配置jmeter环境变量" class="headerlink" title="配置jmeter环境变量"></a>配置jmeter环境变量</h2><h3 id="解压jmeter到usr-x2F-local"><a href="#解压jmeter到usr-x2F-local" class="headerlink" title="解压jmeter到usr&#x2F;local"></a>解压jmeter到usr&#x2F;local</h3><p><img src="/pictures/08JMeter/image-20230104101517327.png"></p>
+<h3 id="启动Jmeter"><a href="#启动Jmeter" class="headerlink" title="启动Jmeter"></a>启动Jmeter</h3><p><img src="/pictures/08JMeter/image-20230104101524299.png"></p>
+<h3 id="打开系统配置文件"><a href="#打开系统配置文件" class="headerlink" title="打开系统配置文件"></a>打开系统配置文件</h3><p>vim &#x2F;etc&#x2F;profile</p>
+<h3 id="配置环境变量-1"><a href="#配置环境变量-1" class="headerlink" title="配置环境变量"></a>配置环境变量</h3><p>+————————————+<br>| JMETER_HOME&#x3D;&#x2F;usr&#x2F;local&#x2F;jmeter&#x2F;    |<br>|                                    |<br>| CLASSPATH&#x3D;$JMETER_HOME&#x2F;lib&#x2F;      |<br>|                                    |<br>| PATH&#x3D;$PATH:$JMETER_HOME&#x2F;bin     |<br>|                                    |<br>| export PATH JMETER_HOME CLASSPATH |<br>+————————————+</p>
+<h3 id="刷新系统配置文件"><a href="#刷新系统配置文件" class="headerlink" title="刷新系统配置文件"></a>刷新系统配置文件</h3><p>source &#x2F;etc&#x2F;profile</p>
+<h3 id="执行jmeter"><a href="#执行jmeter" class="headerlink" title="执行jmeter -?"></a>执行jmeter -?</h3><p><img src="/pictures/08JMeter/image-20230104101538473.png"></p>
+<h3 id="将windows上写好的脚本导入到Linux"><a href="#将windows上写好的脚本导入到Linux" class="headerlink" title="将windows上写好的脚本导入到Linux"></a>将windows上写好的脚本导入到Linux</h3><h3 id="进行测试"><a href="#进行测试" class="headerlink" title="进行测试"></a>进行测试</h3><p>非GUI界面，压测参数讲解</p>
+<p>-h 帮助</p>
+<p>-n 非GUI模式</p>
+<p>-t 指定要运行的 JMeter 测试脚本文件</p>
+<p>-l 记录结果的文件 每次运行之前，(要确保之前没有运行过,即xxx.jtl不存在，不然报错)</p>
+<p>-r Jmter.properties文件中指定的所有远程服务器</p>
+<p>-e 在脚本运行结束后生成html报告</p>
+<p>-o 用于存放html报告的目录（目录要为空，不然报错）</p>
+<p>jmeter -n –t a.jmx -l res.jtl</p>
+<p><img src="/pictures/08JMeter/image-20230104101551634.png"></p>
+<h2 id="将测试结果导入到Jmeter中查看结果数据"><a href="#将测试结果导入到Jmeter中查看结果数据" class="headerlink" title="将测试结果导入到Jmeter中查看结果数据"></a>将测试结果导入到Jmeter中查看结果数据</h2><p><img src="/pictures/08JMeter/image-20230104101600808.png"></p>
+<h1 id="Jmeter压测生成HTML测试报告"><a href="#Jmeter压测生成HTML测试报告" class="headerlink" title="Jmeter压测生成HTML测试报告"></a>Jmeter压测生成HTML测试报告</h1><p>创建文件夹</p>
+<p>mkdir result</p>
+<p>指令执行</p>
+<p>jmeter -n -t baidu.jmx -l res.jtl -e -o &#x2F;result</p>
+<h1 id="Jmeter-HTML报告dashboard讲解"><a href="#Jmeter-HTML报告dashboard讲解" class="headerlink" title="Jmeter HTML报告dashboard讲解"></a>Jmeter HTML报告dashboard讲解</h1><h2 id="Test-and-Report-informations"><a href="#Test-and-Report-informations" class="headerlink" title="Test and Report informations"></a><strong>Test and Report informations</strong></h2><p><img src="/pictures/08JMeter/image-20230104101620957.png"></p>
+<p>+—————————-+<br>| Source file：jtl文件名     |<br>|                            |<br>| Start Time ：压测开始时间  |<br>|                            |<br>| End Time ：压测结束时间    |<br>|                            |<br>| Filter for display：过滤器 |<br>|                            |<br>| Lable:sampler采样器名称    |<br>+—————————-+</p>
+<h2 id="APDEX-Application-performance-Index"><a href="#APDEX-Application-performance-Index" class="headerlink" title="APDEX(Application performance Index)"></a>APDEX(Application performance Index)</h2><p><img src="/pictures/08JMeter/image-20230104101631888.png"></p>
+<p>+—————————————————————-+<br>| apdex:应用程序性能指标,范围在0~1之间，1表示达到所有用户均满意 |<br>|                                                                |<br>| T(Toleration threshold)：可接受阀值                            |<br>|                                                                |<br>| F(Frustration threshold)：失败阀值                             |<br>+—————————————————————-+</p>
+<h2 id="Requests-Summary"><a href="#Requests-Summary" class="headerlink" title="Requests Summary"></a>Requests Summary</h2><p><img src="/pictures/08JMeter/image-20230104101644480.png">OK:成功率</p>
+<p>KO:失败率</p>
+<h2 id="Statistics-统计数据"><a href="#Statistics-统计数据" class="headerlink" title="Statistics 统计数据"></a>Statistics 统计数据</h2><p><img src="/pictures/08JMeter/image-20230104101652991.png"></p>
+<p>lable:sampler采样器名称</p>
+<p>samples:请求总数，并发数*循环次数</p>
+<p>KO:失败次数</p>
+<p>Error%:失败率</p>
+<p>Average:平均响应时间</p>
+<p>Min:最小响应时间</p>
+<p>Max:最大响应时间</p>
+<p>90th pct: 90%的用户响应时间不会超过这个值（关注这个就可以了）</p>
+<p>95th pct: 95%的用户响应时间不会超过这个值</p>
+<p>99th pct: 99%的用户响应时间不会超过这个值 (存在极端值)</p>
+<p>throughtput:Request per Second吞吐量 qps</p>
+<p>received:每秒从服务器接收的数据量</p>
+<p>send：每秒发送的数据量</p>
+<h2 id="错误信息统计"><a href="#错误信息统计" class="headerlink" title="错误信息统计"></a>错误信息统计</h2><p><img src="/pictures/08JMeter/image-20230104101704720.png"></p>
+<h1 id="Jmeter图形化HTML压测报告Charts报表讲解"><a href="#Jmeter图形化HTML压测报告Charts报表讲解" class="headerlink" title="Jmeter图形化HTML压测报告Charts报表讲解"></a>Jmeter图形化HTML压测报告Charts报表讲解</h1><h2 id="Over-Time（随着时间的变化）"><a href="#Over-Time（随着时间的变化）" class="headerlink" title="Over Time（随着时间的变化）"></a>Over Time（随着时间的变化）</h2><p><img src="/pictures/08JMeter/image-20230104101717927.png"></p>
+<p>Response Times Over Time：响应时间变化趋势</p>
+<p>Response Time Percentiles Over Time (successful responses)：最大，最小，平均，用户响应时间分布</p>
+<p>Active Threads Over Time：并发用户数趋势</p>
+<p>Bytes Throughput Over Time：每秒接收和请求字节数变化，蓝色表示发送，黄色表示接受</p>
+<p>Latencies Over Time：平均响应延时趋势</p>
+<p>Connect Time Over Time	：连接耗时趋势</p>
+<h2 id="Throughput"><a href="#Throughput" class="headerlink" title="Throughput"></a>Throughput</h2><p>Hits Per Second (excluding embedded resources):每秒点击次数</p>
+<p>Codes Per Second (excluding embedded resources)：每秒状态码数量</p>
+<p>Transactions Per Second：即TPS，每秒事务数</p>
+<p>Response Time Vs Request：响应时间和请求数对比</p>
+<p>Latency Vs Request：延迟时间和请求数对比</p>
+<h2 id="Response-Times"><a href="#Response-Times" class="headerlink" title="Response Times"></a>Response Times</h2><p>Response Time Percentiles：响应时间百分比</p>
+<p><img src="/pictures/08JMeter/image-20230104101732576.png"></p>
+<p>Response Time Overview：响应时间概述</p>
+<p><img src="/pictures/08JMeter/image-20230104101739594.png"></p>
+<p>Time Vs Threads：活跃线程数和响应时间</p>
+<p><img src="/pictures/08JMeter/image-20230104101746321.png"></p>
+<p>Response Time Distribution：响应时间分布图</p>
+<p><img src="/pictures/08JMeter/image-20230104101754968.png"></p>
+<h1 id="Windows-jmeter-unGUI测试"><a href="#Windows-jmeter-unGUI测试" class="headerlink" title="Windows jmeter unGUI测试"></a>Windows jmeter unGUI测试</h1><h2 id="设置环境变量"><a href="#设置环境变量" class="headerlink" title="设置环境变量"></a>设置环境变量</h2><p><img src="/pictures/08JMeter/image-20230104101805282.png"></p>
+<h2 id="无界面测试"><a href="#无界面测试" class="headerlink" title="无界面测试"></a>无界面测试</h2><p><img src="/pictures/08JMeter/image-20230104101812589.png"></p>
+<h1 id="分布式压测介绍"><a href="#分布式压测介绍" class="headerlink" title="分布式压测介绍"></a>分布式压测介绍</h1><p>普通压测：</p>
+<p>单台机可以对目标机器产生的压力比较小，受限因素包括CPU，网络，IO等</p>
+<p>分布式压测：</p>
+<p>利用多台机器向目标机器产生压力，模拟几万用户并发访问</p>
+<p><img src="/pictures/08JMeter/image-20230104101821321.png"></p>
+<h1 id="Jmeter分布式压测原理"><a href="#Jmeter分布式压测原理" class="headerlink" title="Jmeter分布式压测原理"></a>Jmeter分布式压测原理</h1><p><img src="/pictures/08JMeter/image-20230104101829831.png"></p>
+<p>1、总控机器的节点master，其他产生压力的机器叫”肉鸡” server</p>
+<p>2、master会把压测脚本发送到 server上面</p>
+<p>3、执行的时候，server上只需要把jmeter-server打开就可以了，不用启动jmeter</p>
+<p>4、结束后，server会把压测数据回传给master,然后master汇总输出报告</p>
+<p>5、配置详情</p>
+<h1 id="Jmeter分布式压测实战"><a href="#Jmeter分布式压测实战" class="headerlink" title="Jmeter分布式压测实战"></a>Jmeter分布式压测实战</h1><h2 id="Slave机器设置"><a href="#Slave机器设置" class="headerlink" title="Slave机器设置"></a>Slave机器设置</h2><p>第一步:禁用ssl</p>
+<p>到slave Jmeter的jmeter.properties文件中修改</p>
+<p>server.rmi.ssl.disable&#x3D;true</p>
+<p>第二步:修改slave Jmeter的远程连接端口</p>
+<p>server_port&#x3D;8899 表示master机器要远程连接的端口</p>
+<p>第三步:启动slave Jmeter</p>
+<p>.&#x2F;jmeter-server</p>
+<p>.&#x2F;jmeter-server -Djava.rmi.server.hostname&#x3D;192.168.179.128</p>
+<p>第四步:关闭防火墙</p>
+<p>service iptables stop</p>
+<h2 id="设置Master设备"><a href="#设置Master设备" class="headerlink" title="设置Master设备"></a>设置Master设备</h2><p>关闭防火墙</p>
+<p>service iptables stop</p>
+<p>到slave Jmeter的jmeter.properties文件中修改</p>
+<p>server.rmi.ssl.disable&#x3D;true</p>
+<p>修改remote_hosts&#x3D;127.0.0.1</p>
+<p>为remote_hosts&#x3D;192.168.179.128:9999</p>
+<p>GUI方式启动</p>
+<p><img src="/pictures/08JMeter/image-20230104101846545.png"></p>
+<p>无GUI方式启动</p>
+<p>Jmeter -n -t baidu.jmx -r -l result.jtl -e -o result</p>
+<p><img src="/pictures/08JMeter/image-20230104101853765.png"></p>
+<h1 id="并发用户和TPS关系"><a href="#并发用户和TPS关系" class="headerlink" title="并发用户和TPS关系"></a>并发用户和TPS关系</h1><p>简单计算:</p>
+<p>在线用户数量(日活量)：</p>
+<p>在做性能测试的时候，传统方式都是用并发用户数来衡量系统的性能，觉得系统能支撑的并发用户数越多，系统的性能就越好；同时对TPS不是非常理解，也根本不知道它们之间的关系，因此非常有必要进行解释。因为TPS模式（吞吐量模式）是一种更好的方式衡量服务端系统的能力。</p>
+<h2 id="Vu和TPS换算"><a href="#Vu和TPS换算" class="headerlink" title="Vu和TPS换算"></a>Vu和TPS换算</h2><p>简单例子:</p>
+<p>在术语中解释了TPS是每秒事务数，但是事务时要靠虚拟用户做出来的，</p>
+<p>假如1个虚拟用户在1秒内完成1笔事务，那么TPS明显就是1；</p>
+<p>如果某笔业务响应时间是1ms,那么1个用户在1秒内能完成1000笔事务，TPS就是1000了；</p>
+<p>如果某笔业务响应时间是1s,那么1个用户在1秒内只能完成1笔事务，要想达到1000TPS，至少需要1000个用户；</p>
+<h2 id="如何获取Vu和TPS"><a href="#如何获取Vu和TPS" class="headerlink" title="如何获取Vu和TPS"></a>如何获取Vu和TPS</h2><p>并发用户数(Vu)获取新系统：没有历史数据作参考，只能通过业务部门进行评估。旧系统：对于已经上线的系统，可以选取高峰时刻，在一定时间内使用系统的人数，这些人数认为属于在线用户数，并发用户数取10%就可以了，例如在半个小时内，使用系统的用户数为10000，那么取10%作为并发用户数基本就够了。</p>
+<p>其他计算方式：根据pv计算</p>
+<p>PV(访问量)：即Page View, 即页面浏览量或点击量，用户每次刷新即被计算一次。</p>
+<p>假设:pv数是80w</p>
+<p>（1）平均值情况：80w个用户在时间上均匀地发起请求。那么并发用户数为800000&#x2F;24*60*60&#x3D;9.25并发&#x2F;s。</p>
+<p> （2）80~20原则：根据统计学原理，采用80~20原则计算并发用户数。<br>             800000*0.8&#x2F;（24*60*60*0.2）&#x3D;37并发&#x2F;s</p>
+<p>TPS获取新系统：没有历史数据作参考，只能通过业务部门进行评估。旧系统：对于已经上线的系统，可以选取高峰时刻，在5分钟或10分钟内，获取系统每笔交易的业务量和总业务量，按照单位时间内完成的笔数计算出TPS，即业务笔数&#x2F;单位时间。</p>
+<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><ul>
+<li><p>系统的性能由TPS决定，跟并发用户数没有多大关系。</p>
+</li>
+<li><p>系统的最大TPS是一定的（在一个范围内），但并发用户数不一定，可以调整。</p>
+</li>
+<li><p>建议性能测试的时候，不要设置过长的思考时间，以最坏的情况下对服务器施压。</p>
+</li>
+<li><p>一般情况下，大型系统（业务量大、机器多）做压力测试，10000～50000个用户并发，中小型系统做压力测试，5000个用户并发比较常见。</p>
+</li>
+</ul>
+<h1 id="性能指标"><a href="#性能指标" class="headerlink" title="性能指标"></a>性能指标</h1><h2 id="中间件指标"><a href="#中间件指标" class="headerlink" title="中间件指标"></a>中间件指标</h2><h3 id="定义及解释-1"><a href="#定义及解释-1" class="headerlink" title="定义及解释"></a>定义及解释</h3><p>常用的中间件例如Tomcat、Weblogic等指标主要包括JVM, ThreadPool, JDBC,具体如下：</p>
+<table>
+<thead>
+<tr>
+<th><strong>一级指标</strong></th>
+<th><strong>二级指标</strong></th>
+<th><strong>解释</strong></th>
+<th><strong>备注</strong></th>
+<th></th>
+</tr>
+</thead>
+<tbody><tr>
+<td>GC</td>
+<td>GC频率</td>
+<td>java虚拟机垃圾部分回收频率</td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td></td>
+<td>Full GC频率</td>
+<td>java虚拟机垃圾完全回收频率</td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td></td>
+<td>Full GC平均时长</td>
+<td>用于垃圾完全回收的平均时长</td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td></td>
+<td>Full GC最大时长</td>
+<td>用于垃圾完全回收的最大时长</td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td></td>
+<td>堆使用率</td>
+<td>堆使用率</td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>ThreadPool</td>
+<td>Active Thread Count</td>
+<td>活动的线程数</td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td></td>
+<td>Pending User Request</td>
+<td>处于排队的用户请求个数</td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>JDBC</td>
+<td>JDBC Active Connection</td>
+<td>JDBC活动连接数</td>
+<td></td>
+<td></td>
+</tr>
+</tbody></table>
+<h3 id="标准-3"><a href="#标准-3" class="headerlink" title="标准"></a>标准</h3><ul>
+<li><p>当前正在运行的线程数不能超过设定的最大值。一般情况下系统性能较好的情况下，线程数最小值设置50和最大值设置200比较合适。</p>
+</li>
+<li><p>当前运行的JDBC连接数不能超过设定的最大值。一般情况下系统性能较好的情况下，JDBC最小值设置50和最大值设置200比较合适。</p>
+</li>
+<li><p>ＧＣ频率不能频繁，特别是FULL GC更不能频繁，一般情况下系统性能较好的情况下，JVM最小堆大小和最大堆大小分别设置1024M比较合适。</p>
+</li>
+</ul>
+<h2 id="数据库指标"><a href="#数据库指标" class="headerlink" title="数据库指标"></a>数据库指标</h2><h3 id="定义及解释-2"><a href="#定义及解释-2" class="headerlink" title="定义及解释"></a>定义及解释</h3><p>常用的数据库例如ＭySQL指标主要包括SQL、吞吐量、缓存命中率、连接数等，具体如下：</p>
+<table>
+<thead>
+<tr>
+<th><strong>一级指标</strong></th>
+<th><strong>二级指标</strong></th>
+<th><strong>单位</strong></th>
+<th><strong>解释</strong></th>
+<th></th>
+</tr>
+</thead>
+<tbody><tr>
+<td>SQL</td>
+<td>耗时</td>
+<td>微秒</td>
+<td>执行SQL耗时</td>
+<td></td>
+</tr>
+<tr>
+<td>吞吐量</td>
+<td>QPS</td>
+<td>个</td>
+<td>每秒查询次数</td>
+<td></td>
+</tr>
+<tr>
+<td></td>
+<td>TPS</td>
+<td>个</td>
+<td>每秒事务次数</td>
+<td></td>
+</tr>
+<tr>
+<td>命中率</td>
+<td>Key Buffer命中率</td>
+<td>百分之</td>
+<td>索引缓冲区命中率</td>
+<td></td>
+</tr>
+<tr>
+<td></td>
+<td>InnoDB Buffer命中率</td>
+<td>百分之</td>
+<td>InnoDB缓冲区命中率</td>
+<td></td>
+</tr>
+<tr>
+<td></td>
+<td>Query Cache命中率</td>
+<td>百分之</td>
+<td>查询缓存命中率</td>
+<td></td>
+</tr>
+<tr>
+<td></td>
+<td>Table Cache命中率</td>
+<td>百分之</td>
+<td>表缓存命中率</td>
+<td></td>
+</tr>
+<tr>
+<td></td>
+<td>Thread Cache命中率</td>
+<td>百分之</td>
+<td>线程缓存命中率</td>
+<td></td>
+</tr>
+<tr>
+<td>锁</td>
+<td>等待次数</td>
+<td>次</td>
+<td>锁等待次数</td>
+<td></td>
+</tr>
+<tr>
+<td></td>
+<td>等待时间</td>
+<td>微秒</td>
+<td>锁等待时间</td>
+<td></td>
+</tr>
+</tbody></table>
+<hr>
+<hr>
+<h3 id="标准-4"><a href="#标准-4" class="headerlink" title="标准"></a>标准</h3><ul>
+<li><p>SQL耗时越小越好，一般情况下微秒级别。</p>
+</li>
+<li><p>命中率越高越好，一般情况下不能低于95%。</p>
+</li>
+<li><p>锁等待次数越低越好，等待时间越短越好。</p>
+</li>
+</ul>
+<h2 id="前端指标"><a href="#前端指标" class="headerlink" title="前端指标"></a>前端指标</h2><h3 id="定义及解释-3"><a href="#定义及解释-3" class="headerlink" title="定义及解释"></a>定义及解释</h3><p>前端指标主要包括页面展示和网络所花的时间，具体如下：</p>
+<table>
+<thead>
+<tr>
+<th><strong>一级指标</strong></th>
+<th><strong>二级指标</strong></th>
+<th><strong>单位</strong></th>
+<th><strong>解释</strong></th>
+<th><strong>备注</strong></th>
+<th></th>
+</tr>
+</thead>
+<tbody><tr>
+<td>页面展示</td>
+<td>首次显示时间</td>
+<td>毫秒</td>
+<td>在浏览器地址栏输入URL按回车到用户看到网页的第一个视觉标志为止</td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td></td>
+<td>OnLoad事件时间</td>
+<td>毫秒</td>
+<td>浏览器触发onLoad事件的时间，当原始文档和所有引用的内容完全下载后才会触发这个事件</td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td></td>
+<td>完全载入的时间</td>
+<td>毫秒</td>
+<td>所有onLoad JavaScript 处理程序执行完毕，所有动态的或延迟加载的内容都通过这些处理程序触发的时间</td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>页面数量</td>
+<td>页面大小</td>
+<td>KB</td>
+<td>整个页面大小</td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td></td>
+<td>请求数量</td>
+<td>次</td>
+<td>从网站下载资源时所有网络请求的总数，尽量少</td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>网络</td>
+<td>DNS时间</td>
+<td>毫秒</td>
+<td>DNS查找时间</td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td></td>
+<td>连接时间</td>
+<td>毫秒</td>
+<td>连接时间就是浏览器与Web服务器建立TCP&#x2F;IP连接的时间</td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td></td>
+<td>服务器时间</td>
+<td>毫秒</td>
+<td>服务器处理时间</td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td></td>
+<td>传输时间</td>
+<td>毫秒</td>
+<td>内容传输所用时间</td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td></td>
+<td>等待时间</td>
+<td>毫秒</td>
+<td>等待某个资源释放的时间</td>
+<td></td>
+<td></td>
+</tr>
+</tbody></table>
+<h3 id="标准-5"><a href="#标准-5" class="headerlink" title="标准"></a>标准</h3><ul>
+<li><p>页面要尽可能小及压缩。</p>
+</li>
+<li><p>页面展示和花费时间越短越好。</p>
+</li>
+</ul>
+<h2 id="稳定性指标"><a href="#稳定性指标" class="headerlink" title="稳定性指标"></a>稳定性指标</h2><h3 id="定义及解释-4"><a href="#定义及解释-4" class="headerlink" title="定义及解释"></a>定义及解释</h3><p>最短稳定时间：系统按照最大容量的80%或标准压力（系统的预期日常压力）情况下运行，能够稳定运行的最短时间。一般来说，对于正常工作日（8小时）运行的系统，至少应该能保证系统稳定运行８小时以上。对于7*24运行的系统，至少应该能够保证系统稳定运行24小时以上。如果系统不能稳定的运行，上线后，随着业务量的增长和长时间运行，将会出现性能下降甚至崩溃的风险。</p>
+<h3 id="标准-6"><a href="#标准-6" class="headerlink" title="标准"></a>标准</h3><ul>
+<li><p>TPS曲线稳定，没有大幅度的波动。</p>
+</li>
+<li><p>各项资源指标没有泄露或异常情况。</p>
+</li>
+</ul>
+<h1 id="性能分析"><a href="#性能分析" class="headerlink" title="性能分析"></a>性能分析</h1><p>性能分析的前提除了需要丰富的性能测试监控，还要了解操作系统、中间件(tomcat)、数据库(mysql oracle sqlserver)、开发等。</p>
+<h2 id="流程"><a href="#流程" class="headerlink" title="流程"></a>流程</h2><ul>
+<li><p>很多情况下压测流量并没有完全进入到后端（服务端），在网络接入层（云化的架构比如：SLB&#x2F;WAF&#x2F;高防IP，甚至是CDN&#x2F;全站加速等）可能就会出现由于各种规格（带宽、最大连接数、新建连接数等）限制或者因为压测的某些特征符合CC和DDoS的行为而触发了防护策略导致压测结果达不到预期。</p>
+</li>
+<li><p>接着看关键指标是否满足要求，如果不满足，需要确定是哪个地方有问题，一般情况下，服务器端问题可能性比较大，也有可能是客户端问题（这种情况非常小）。</p>
+</li>
+<li><p>对于服务器端问题，需要定位的是硬件相关指标，例如CPU，Memory, Disk I&#x2F;O, Network I&#x2F;O, 如果是某个硬件指标有问题，需要深入的进行分析。</p>
+</li>
+<li><p>如果硬件指标都没有问题，需要查看中间件相关指标，例如：线程池、连接池、GC等，如果是这些指标问题，需要深入的 分析。</p>
+</li>
+<li><p>如果中间件相关指标没问题，需要查看数据库相关指标，例如：慢查SQL，命中率，锁、参数设置。</p>
+</li>
+<li><p>如果以上指标都正常，应用程序的算法、缓冲、缓存、同步或异步可能有问题，需要具体深入的分析。</p>
+<p><img src="/pictures/08JMeter/image-20230104101937127.png">可能瓶颈点</p>
+</li>
+</ul>
+<h3 id="硬件-x2F-规格上的瓶颈"><a href="#硬件-x2F-规格上的瓶颈" class="headerlink" title="硬件&#x2F;规格上的瓶颈"></a><strong>硬件&#x2F;规格上的瓶颈</strong></h3><p>一般指的是CPU、内存、磁盘I&#x2F;O 方面的问题，分为服务器硬件瓶颈、网络瓶颈（对局域网可以不考虑）。</p>
+<h3 id="中间件上的性能瓶颈"><a href="#中间件上的性能瓶颈" class="headerlink" title="中间件上的性能瓶颈"></a><strong>中间件上的性能瓶颈</strong></h3><p>一般指的是应用服务器、web 服务器等应用软件，还包括数据库系统。例如：中间件weblogic&#x2F;tomcat平台上配置的JDBC连接池的参数设置不合理，造成的瓶颈。</p>
+<h3 id="应用程序上的性能瓶颈"><a href="#应用程序上的性能瓶颈" class="headerlink" title="应用程序上的性能瓶颈"></a><strong>应用程序上的性能瓶颈</strong></h3><p>一般指的是开发人员开发出来的应用程序。例如，JVM参数不合理，容器配置不合理，慢SQL，数据库设计不合理，程序架构规划不合理，程序本身设计有问题（串行处理、请求的处理线程不够、无缓冲、无缓存、生产者和消费者不协调等），造成系统在大量用户方位时性能低下而造成的瓶颈。</p>
+<h3 id="操作系统上的性能瓶颈"><a href="#操作系统上的性能瓶颈" class="headerlink" title="操作系统上的性能瓶颈"></a><strong>操作系统上的性能瓶颈</strong></h3><p>一般指的是windows、UNIX、Linux等操作系统。例如，在进行性能测试，出现物理内存不足时，虚拟内存设置也不合理，虚拟内存的交换效率就会大大降低，从而导致行为的响应时间大大增加，这时认为操作系统上出现性能瓶颈。</p>
+<h3 id="网络设备上的性能瓶颈"><a href="#网络设备上的性能瓶颈" class="headerlink" title="网络设备上的性能瓶颈"></a><strong>网络设备上的性能瓶颈</strong></h3><p>一般指的是防火墙、动态负载均衡器、交换机等设备。当前更多的云化服务架构使用的网络接入产品：包括但不限于SLB&#x2F;WAF&#x2F;高防IP&#x2F;CDN&#x2F;全站加速等等。例如，在动态负载均衡器上设置了动态分发负载的机制，当发现某个应用服务器上的硬件资源已经到达极限时，动态负载均衡器将后续的交易请求发送到其他负载较轻的应用服务器上。在测试时发现，动态负载均衡器没有起到相应的作用，这时可以认为网络瓶颈。</p>
+<h2 id="方法"><a href="#方法" class="headerlink" title="方法"></a>方法</h2><h3 id="CPU-1"><a href="#CPU-1" class="headerlink" title="CPU"></a><strong>CPU</strong></h3><p>CPU资源利用率很高的话，需要看CPU消耗User,Sys,Wait那种状态下。</p>
+<ul>
+<li><p>如果CPU User非常高，需要查看消耗在哪个进程，可以用top(linux)命令看出，接着用top –H –p &lt;pid&gt;看哪个线程消耗资源高，如果是java应用，就可以用jstack看出此线程正在执行的堆栈，看资源消耗在哪个方法上，查看源代码就知道问题所在；如果是c++应用，可以用gprof性能工具进行分析。</p>
+</li>
+<li><p>如果CPU Sys非常高，可以用strace(linux)看系统调用的资源消耗及时间。</p>
+</li>
+<li><p>如果CPU Wait非常高，考虑磁盘读写了，可以通过减少日志输出、异步或换速度快的硬盘。</p>
+</li>
+</ul>
+<h3 id="Memory-1"><a href="#Memory-1" class="headerlink" title="Memory"></a><strong>Memory</strong></h3><p>操作系统未了最大化利用内存，一般都设置大量的cache,因此，内存利用率高达99%并不是问题，内存的问题主要看某个进程占用的内存是否非常大以及是否有大量的swap(虚拟内存交换)。</p>
+<h3 id="磁盘I-x2F-O"><a href="#磁盘I-x2F-O" class="headerlink" title="磁盘I&#x2F;O"></a><strong>磁盘I&#x2F;O</strong></h3><p>磁盘I&#x2F;O一个最显著的指标是繁忙率，可以通过减少日志输出、异步或换速度快的硬盘。</p>
+<h3 id="网络I-x2F-O"><a href="#网络I-x2F-O" class="headerlink" title="网络I&#x2F;O"></a><strong>网络I&#x2F;O</strong></h3><p>网络I&#x2F;O主要考虑传输内容大小，不能超过硬件网络传输的最大值70%，可以通过压缩、减少内容大小、在本地设置缓存以及分多次传输等。</p>
+<h3 id="JVM"><a href="#JVM" class="headerlink" title="JVM"></a><strong>JVM</strong></h3><p>jvm主要分析GC&#x2F;FULL GC是否频繁，以及垃圾回收的时间，可以用jstat命令来查看，对于每个代大小以及GC频繁，通过jmap将内存dump,再借助工具HeapAnalyzer来分析哪地方占用的内存较高以及是否有内存泄漏可能。简单点可以使用APM工具，比如阿里云ARMS，下同。</p>
+<h3 id="线程池"><a href="#线程池" class="headerlink" title="线程池"></a><strong>线程池</strong></h3><p>如果线程不够用，可以通过参数调整，增加线程；对于线程池中的线程设置比较大的情况，还是不够用可能的原因是：某个线程被阻塞来不及释放，可能在等锁、方法耗时较长、数据库等待时间很长等原因导致，需要进一步分析才能定位。</p>
+<h3 id="JDBC连接池"><a href="#JDBC连接池" class="headerlink" title="JDBC连接池"></a><strong>JDBC连接池</strong></h3><p>连接池不够用的情况下，可以通过参数进行调整增加；但是对于数据库本身处理很慢的情况下，调整没有多大的效果，需要查看数据库方面以及因代码导致连接未释放的原因。</p>
+<h3 id="SQL"><a href="#SQL" class="headerlink" title="SQL"></a><strong>SQL</strong></h3><p>SQL效率低下也是导致性能差的一个非常重要的原因，可以通过查看执行计划看SQL慢在哪里，一般情况，SQL效率低下原因主要有：</p>
+<table>
+<thead>
+<tr>
+<th><em><strong>*类别*</strong></em></th>
+<th><em><strong>*子类*</strong></em></th>
+<th><em><strong>*表达式或描述*</strong></em></th>
+<th><em><strong>*原因*</strong></em></th>
+</tr>
+</thead>
+<tbody><tr>
+<td>索引</td>
+<td>未建索引</td>
+<td></td>
+<td>产生全表扫描</td>
+</tr>
+<tr>
+<td></td>
+<td>未利用索引</td>
+<td>substring(card_no,1,4)&#x3D;′5378′</td>
+<td>产生全表扫描</td>
+</tr>
+<tr>
+<td></td>
+<td></td>
+<td>amount&#x2F;30&lt; 1000</td>
+<td>产生全表扫描</td>
+</tr>
+<tr>
+<td></td>
+<td></td>
+<td>convert(char(10),date,112)&#x3D;′19991201′</td>
+<td>产生全表扫描</td>
+</tr>
+<tr>
+<td></td>
+<td></td>
+<td>where salary&lt;&gt;3000</td>
+<td>产生全表扫描</td>
+</tr>
+<tr>
+<td></td>
+<td></td>
+<td>name like ‘%张’</td>
+<td>产生全表扫描</td>
+</tr>
+<tr>
+<td></td>
+<td></td>
+<td>first_name + last_name &#x3D;’beill cliton’</td>
+<td>产生全表扫描</td>
+</tr>
+<tr>
+<td></td>
+<td></td>
+<td>id_no in(′0′,′1′)</td>
+<td>产生全表扫描</td>
+</tr>
+<tr>
+<td></td>
+<td></td>
+<td>select id from t where num&#x3D;@num</td>
+<td>有参数也会产生全表扫描</td>
+</tr>
+<tr>
+<td></td>
+<td>使用效能低的索引</td>
+<td>oder by 非聚族索引</td>
+<td>索引性能低</td>
+</tr>
+<tr>
+<td></td>
+<td></td>
+<td>username&#x3D;’张三’ and age&gt;20</td>
+<td>字符串索引低于整形索引</td>
+</tr>
+<tr>
+<td></td>
+<td></td>
+<td>表中列与空NULL值</td>
+<td>索引性能低</td>
+</tr>
+<tr>
+<td></td>
+<td></td>
+<td>尽量不要使用IS NULL或IS NOT NULL</td>
+<td>索引性能低</td>
+</tr>
+<tr>
+<td>数据量</td>
+<td>所有数据量</td>
+<td>select *</td>
+<td>很多列产生大量数据</td>
+</tr>
+<tr>
+<td></td>
+<td></td>
+<td>select id,name</td>
+<td>表中有几百万行，产生大量数据</td>
+</tr>
+<tr>
+<td></td>
+<td>嵌套查询</td>
+<td>先不过滤数据，后过滤数据</td>
+<td>产生大量无用的数据</td>
+</tr>
+<tr>
+<td></td>
+<td>关联查询</td>
+<td>多表进行关联查询，先过滤掉小部分数据，在过滤大部分数据</td>
+<td>大量关联操作</td>
+</tr>
+<tr>
+<td></td>
+<td>大数据量插入</td>
+<td>一次次插入</td>
+<td>产生大量日志，消耗资源</td>
+</tr>
+<tr>
+<td>锁</td>
+<td>锁等待</td>
+<td>update account set banlance&#x3D;100 where id&#x3D;10</td>
+<td>产生表级锁，将会锁住整个表</td>
+</tr>
+<tr>
+<td></td>
+<td>死锁</td>
+<td>A:update a;update b;B:update b;update a;</td>
+<td>将会产生死锁</td>
+</tr>
+<tr>
+<td></td>
+<td>游标</td>
+<td>Cursor Open cursor,fetch;close cursor</td>
+<td>性能很低</td>
+</tr>
+<tr>
+<td></td>
+<td>临时表</td>
+<td>create tmp table 创建临时表</td>
+<td>产生大量日志</td>
+</tr>
+<tr>
+<td></td>
+<td>drop table</td>
+<td>删除临时表</td>
+<td>需要显示删除，避免系统表长时间锁定</td>
+</tr>
+<tr>
+<td>其他</td>
+<td>exist 代替 IN</td>
+<td>select num from a where num in(select num from b)</td>
+<td>in会逐个判断,exist有一条就结束</td>
+</tr>
+<tr>
+<td></td>
+<td>exist 代替select count(*)</td>
+<td>判断记录是否存在</td>
+<td>count(*)将累加计算，exist有就结束</td>
+</tr>
+<tr>
+<td></td>
+<td>between 代替 IN</td>
+<td>ID in(1,2,3)</td>
+<td>IN逐个判断，between是范围判断</td>
+</tr>
+<tr>
+<td></td>
+<td>left outer join 代替Not IN</td>
+<td>select ID from a where ID not in(select b.Mainid from b)</td>
+<td>NOT IN逐个判断，效率非常低</td>
+</tr>
+<tr>
+<td></td>
+<td>union all 代替union</td>
+<td>select ID from a union select id from b union</td>
+<td>删除重复的行，可能会在磁盘进行排序而union all只是简单的将结果并在一起</td>
+</tr>
+<tr>
+<td></td>
+<td>常用SQL尽量用绑定变量方法</td>
+<td>insert into A(ID) values(1)</td>
+<td>直接写SQL每次都要编译，用绑定变量的方法只编译一次，下次就可以用了</td>
+</tr>
+</tbody></table>
+</div></article><div class="post-meta__tag-list"><a class="post-meta__tags" href="/tags/Jmeter/">Jmeter</a><a class="post-meta__tags" href="/tags/%E6%80%A7%E8%83%BD%E6%B5%8B%E8%AF%95/">性能测试</a></div><nav id="pagination"><div class="prev-post pull-left"><a href="/2020/01/03/05Loop_creation_variable/"><i class="fa fa-chevron-left">  </i><span>Python循环创建变量/规律性命名变量</span></a></div></nav><div id="vcomment"></div><script src="https://cdn1.lncld.net/static/js/3.0.4/av-min.js"></script><script src="https://cdn.jsdelivr.net/npm/valine/dist/Valine.min.js"></script><script>var notify = 'false' == 'true';
+var verify = 'false' == 'true';
+var record_ip = 'false' == 'true';
+var GUEST_INFO = ['nick','mail','link'];
+var guest_info = 'nick'.split(',').filter(function(item){
+  return GUEST_INFO.indexOf(item) > -1
+});
+guest_info = guest_info.length == 0 ? GUEST_INFO :guest_info;
+window.valine = new Valine({
+  el:'#vcomment',
+  notify:notify,
+  verify:verify,
+  recordIP:record_ip,
+  appId:'F1Yvbj0NxwrB3DRaljWZOPe9-gzGzoHsz',
+  appKey:'vvI8fXV2CIAJXrex6pBlFHBz',
+  placeholder:'留下您的评论建议吧~',
+  avatar:'wavatar',
+  guest_info:guest_info,
+  pageSize:'10',
+  lang: 'zh-cn'
+})</script></div></div><footer><div class="layout" id="footer"><div class="copyright">&copy;2021 - 2023 By babyfengfjx</div><div class="framework-info"><span>驱动 - </span><a target="_blank" rel="noopener" href="http://hexo.io"><span>Hexo</span></a><span class="footer-separator">|</span><span>主题 - </span><a target="_blank" rel="noopener" href="https://github.com/Molunerfinn/hexo-theme-melody"><span>Melody</span></a></div><div class="busuanzi"><script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script><span id="busuanzi_container_page_pv"><i class="fa fa-file"></i><span id="busuanzi_value_page_pv"></span><span></span></span></div></div></footer><i class="fa fa-arrow-up" id="go-up" aria-hidden="true"></i><script src="https://cdn.jsdelivr.net/npm/animejs@latest/lib/anime.min.js"></script><script src="https://cdn.jsdelivr.net/npm/jquery@latest/dist/jquery.min.js"></script><script src="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@latest/dist/jquery.fancybox.min.js"></script><script src="https://cdn.jsdelivr.net/npm/velocity-animate@latest/velocity.min.js"></script><script src="https://cdn.jsdelivr.net/npm/velocity-ui-pack@latest/velocity.ui.min.js"></script><script src="/js/utils.js?version=1.9.1"></script><script src="/js/fancybox.js?version=1.9.1"></script><script src="/js/sidebar.js?version=1.9.1"></script><script src="/js/copy.js?version=1.9.1"></script><script src="/js/fireworks.js?version=1.9.1"></script><script src="/js/transition.js?version=1.9.1"></script><script src="/js/scroll.js?version=1.9.1"></script><script src="/js/head.js?version=1.9.1"></script><script src="/js/search/algolia.js"></script><script>if(/Android|webOS|iPhone|iPod|iPad|BlackBerry/i.test(navigator.userAgent)) {
+  $('#nav').addClass('is-mobile')
+  $('footer').addClass('is-mobile')
+  $('#top-container').addClass('is-mobile')
+}</script><div class="search-dialog" id="algolia-search"><div class="search-dialog__title" id="algolia-search-title">Algolia</div><div id="algolia-input-panel"><div id="algolia-search-input"></div></div><hr><div id="algolia-search-results"><div id="algolia-hits"></div><div id="algolia-pagination"></div><div id="algolia-stats"></div></div><span class="search-close-button"><i class="fa fa-times"></i></span></div><div class="search-mask"></div></body></html>

@@ -1,0 +1,123 @@
+<!DOCTYPE html><html lang="zh-Hans"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"><meta name="description" content="linux系统根目录扩容（图形化操作）"><meta name="keywords" content="linux,扩容"><meta name="author" content="babyfengfjx"><meta name="copyright" content="babyfengfjx"><title>linux系统根目录扩容（图形化操作） | babyfengfjx'Blog</title><link rel="shortcut icon" href="/melody-favicon.ico"><link rel="stylesheet" href="/css/index.css?version=1.9.1"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/font-awesome@latest/css/font-awesome.min.css?version=1.9.1"><meta name="format-detection" content="telephone=no"><meta http-equiv="x-dns-prefetch-control" content="on"><link rel="dns-prefetch" href="https://cdn.jsdelivr.net"><link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/instantsearch.js@2.1.1/dist/instantsearch.min.css"><script src="https://cdn.jsdelivr.net/npm/instantsearch.js@2.1.1/dist/instantsearch.min.js" defer></script><meta http-equiv="Cache-Control" content="no-transform"><meta http-equiv="Cache-Control" content="no-siteapp"><script>var GLOBAL_CONFIG = { 
+  root: '/',
+  algolia: {"appId":"RPHOC0H5T9","apiKey":"723903e5de5899f6cc4ad96fc50931c1","indexName":"hexo_blog","hits":{"per_page":10},"languages":{"input_placeholder":"搜索文章","hits_empty":"找不到您查询的内容:${query}","hits_stats":"找到 ${hits} 条结果，用时 ${time} 毫秒"}},
+  localSearch: undefined,
+  copy: {
+    success: '复制成功',
+    error: '复制错误',
+    noSupport: '浏览器不支持'
+  },
+  hexoVersion: '6.3.0'
+} </script><meta name="generator" content="Hexo 6.3.0"></head><body><i class="fa fa-arrow-right" id="toggle-sidebar" aria-hidden="true"></i><div id="sidebar" data-display="true"><div class="toggle-sidebar-info text-center"><span data-toggle="切换文章详情">切换站点概览</span><hr></div><div class="sidebar-toc"><div class="sidebar-toc__title">目录</div><div class="sidebar-toc__progress"><span class="progress-notice">你已经读了</span><span class="progress-num">0</span><span class="progress-percentage">%</span><div class="sidebar-toc__progress-bar"></div></div><div class="sidebar-toc__content"><ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%89%8D%E8%A8%80"><span class="toc-number">1.</span> <span class="toc-text">前言</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Step-One-%E8%BF%9B%E5%85%A5live%E7%B3%BB%E7%BB%9F"><span class="toc-number">2.</span> <span class="toc-text">Step One:进入live系统</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%96%B9%E6%A1%88%E4%B8%80"><span class="toc-number">2.1.</span> <span class="toc-text">方案一</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%96%B9%E6%A1%88%E4%BA%8C"><span class="toc-number">2.2.</span> <span class="toc-text">方案二</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Step-Two-%E8%BF%9E%E6%8E%A5%E7%BD%91%E7%BB%9C"><span class="toc-number">3.</span> <span class="toc-text">Step Two:连接网络</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Step-Three-%E6%96%B0%E5%A2%9E%E7%B3%BB%E7%BB%9F%E4%BB%93%E5%BA%93"><span class="toc-number">4.</span> <span class="toc-text">Step Three:新增系统仓库</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Step-Four-%E5%AE%89%E8%A3%85gparted%E5%BA%94%E7%94%A8"><span class="toc-number">5.</span> <span class="toc-text">Step Four:安装gparted应用</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Step-Five-%E4%BD%BF%E7%94%A8gparted%E8%BF%9B%E8%A1%8C%E6%89%A9%E5%AE%B9%E6%93%8D%E4%BD%9C"><span class="toc-number">6.</span> <span class="toc-text">Step Five 使用gparted进行扩容操作</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E8%A7%82%E5%AF%9F%E5%BD%93%E5%89%8D%E5%88%86%E5%8C%BA"><span class="toc-number">6.1.</span> <span class="toc-text">观察当前分区</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%8E%8B%E7%BC%A9data%E5%88%86%E5%8C%BA"><span class="toc-number">6.2.</span> <span class="toc-text">压缩data分区</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Rootb%E5%88%86%E5%8C%BA%E5%90%88%E5%B9%B6%E7%A9%BA%E9%97%B2%E7%A9%BA%E9%97%B4"><span class="toc-number">6.3.</span> <span class="toc-text">Rootb分区合并空闲空间</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Rootb%E5%88%86%E5%8C%BA%E5%8E%8B%E7%BC%A9%E7%A9%BA%E9%97%B4"><span class="toc-number">6.4.</span> <span class="toc-text">Rootb分区压缩空间</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Roota%E5%90%88%E5%B9%B6%E7%A9%BA%E9%97%B2%E7%A9%BA%E9%97%B4"><span class="toc-number">6.5.</span> <span class="toc-text">Roota合并空闲空间</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%A0%B8%E5%AE%9E%E6%9C%80%E7%BB%88%E7%A9%BA%E9%97%B4%E5%88%86%E9%85%8D%E6%83%85%E5%86%B5"><span class="toc-number">6.6.</span> <span class="toc-text">核实最终空间分配情况</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%BA%94%E7%94%A8%E6%9C%80%E7%BB%88%E7%9A%84%E6%95%B0%E6%8D%AE%E5%8F%98%E6%9B%B4"><span class="toc-number">6.7.</span> <span class="toc-text">应用最终的数据变更</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%9C%80%E7%BB%88%E6%A0%B8%E5%AE%9E%E5%88%86%E5%8C%BA%E6%83%85%E5%86%B5%EF%BC%9A"><span class="toc-number">6.8.</span> <span class="toc-text">最终核实分区情况：</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E9%AA%8C%E8%AF%81%E4%BD%A0%E7%9A%84%E6%88%90%E6%9E%9C"><span class="toc-number">6.9.</span> <span class="toc-text">验证你的成果</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%90%8E%E8%AE%B0"><span class="toc-number">7.</span> <span class="toc-text">后记</span></a></li></ol></div></div><div class="author-info hide"><div class="author-info__avatar text-center"><img src="https://github.com/babyfengfjx/babyfengfjx.github.io/blob/main/pictures/avatar/avatar.jpg?raw=true"></div><div class="author-info__name text-center">babyfengfjx</div><div class="author-info__description text-center"></div><hr><div class="author-info-articles"><a class="author-info-articles__archives article-meta" href="/archives"><span class="pull-left">文章</span><span class="pull-right">16</span></a><a class="author-info-articles__tags article-meta" href="/tags"><span class="pull-left">标签</span><span class="pull-right">25</span></a><a class="author-info-articles__categories article-meta" href="/categories"><span class="pull-left">分类</span><span class="pull-right">12</span></a></div></div></div><div id="content-outer"><div class="no-bg" id="top-container"><div id="page-header"><span class="pull-left"> <a id="site-name" href="/">babyfengfjx'Blog</a></span><i class="fa fa-bars toggle-menu pull-right" aria-hidden="true"></i><span class="pull-right menus">   <a class="site-page" href="/">主页</a><a class="site-page" href="/archives">归档</a><a class="site-page" href="/tags">标签</a><a class="site-page" href="/categories">分类</a></span><span class="pull-right"><a class="site-page social-icon search"><i class="fa fa-search"></i><span> 搜索</span></a></span></div><div id="post-info"><div id="post-title">linux系统根目录扩容（图形化操作）</div><div id="post-meta"><time class="post-meta__date"><i class="fa fa-calendar" aria-hidden="true"></i> 2022-10-21</time><span class="post-meta__separator">|</span><i class="fa fa-inbox post-meta__icon" aria-hidden="true"></i><a class="post-meta__categories" href="/categories/linux/">linux</a></div></div></div><div class="layout" id="content-inner"><article id="post"><div class="article-container" id="post-content"><blockquote>
+<p><strong>友情提醒</strong>：数据无价，以下操作请大家提前备份好自己的个人数据，以防操作失误造成不可逆损失。操作前确认自己知晓可能存在的系统损坏或者数据丢失风险！<br>{.is-warning}</p>
+</blockquote>
+<h1 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h1><p>基于一些历史原因，deepin在全盘安装的时候，划分给根分区的空间只有区区15G，随着用户日渐使用过程中，这15G空间总会是捉襟见肘的，况且当下硬盘动不动就是几个T，其他都给那“没用”的data了，但是已经使用这么久了，总不该要我重新安装选择手动分区吧，而且用户也需要AB分区的备份功能怎么办？</p>
+<p><strong>这个时候就需要进行扩容操作了，过程其实非常简单，当前方案操作流程主要涉及如下内容：</strong></p>
+<p><img src="/pictures/11Root_directory_expansion/202205192200407801_UntitledDiagram.png" alt="操作流程图"></p>
+<h1 id="Step-One-进入live系统"><a href="#Step-One-进入live系统" class="headerlink" title="Step One:进入live系统"></a>Step One:进入live系统</h1><p><img src="/pictures/11Root_directory_expansion/202205201618318171_1.gif" alt="Grub界面"></p>
+<p><strong>很多人可能还不知道如何进入deepin的live系统，可以看上面动图的操作，也是非常简单：</strong></p>
+<h2 id="方案一"><a href="#方案一" class="headerlink" title="方案一"></a>方案一</h2><ol>
+<li><p>首先准备好一个装有deepin镜像的启动U盘（推荐使用ventoy）；</p>
+</li>
+<li><p>直接走装镜像的路子,启动到系统安装界面；</p>
+</li>
+<li><p>唯一区别是在grub安装界面的时候，不要选择任何选项，而是按一下键盘上的 <kbd>E</kbd> 按键（如果是非EFI启动，可能需要按 <kbd>TAB</kbd> 键）；</p>
+</li>
+<li><p>按过之后就会出现下图的编辑界面，通过上下左右按键移动到下方红框标识处，删除 <strong>“cd-installer”</strong> 内容；</p>
+<p><img src="/pictures/11Root_directory_expansion/20220520162047272_2.png" alt="编辑启动参数"></p>
+</li>
+<li><p>然后直接按键盘上 <kbd>F10</kbd> 按键，接下来就会直接进入live系统界面了。</p>
+</li>
+<li><p>进入live系统后是如下界面的样子（下图是V20.6的镜像）：</p>
+<blockquote>
+<p>特别提醒：在live系统下长时间也会自动锁屏了，如果你也遇到了锁屏发现没有密码无法进入系统，可能你需要重新来一次，此时可以直接通过 <kbd>Ctrl</kbd> + <kbd>Alt</kbd> + <kbd>F2</kbd> 进入TTY，然后在TTY界面设置密码即可：<code>sudo passwd uos</code>，然后再切回来用设置的密码登录即可。</p>
+</blockquote>
+</li>
+</ol>
+<p><img src="/pictures/11Root_directory_expansion/202205201621386209_3.png" alt="桌面"></p>
+<h2 id="方案二"><a href="#方案二" class="headerlink" title="方案二"></a>方案二</h2><p>可以使用论坛中大佬提供的live系统，电梯直达：<a target="_blank" rel="noopener" href="https://bbs.deepin.org/post/236521">https://bbs.deepin.org/post/236521</a></p>
+<h1 id="Step-Two-连接网络"><a href="#Step-Two-连接网络" class="headerlink" title="Step Two:连接网络"></a>Step Two:连接网络</h1><p>我们进入live系统后，第一时间就是记得去连接好网络，准备下一步的工具安装，连接好后确认一下你的网络是否正常哦。</p>
+<h1 id="Step-Three-新增系统仓库"><a href="#Step-Three-新增系统仓库" class="headerlink" title="Step Three:新增系统仓库"></a>Step Three:新增系统仓库</h1><p>因为live系统本身是未带系统仓库的，我们需要手动添加系统仓库信息，具体操作可以看下面动图：</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="comment"># 编辑源文件</span></span><br><span class="line">sudo vim /etc/apt/sources.list</span><br><span class="line"><span class="comment"># 然后敲入下面的源地址</span></span><br><span class="line">deb https://community-packages.deepin.com/deepin/ apricot main contrib non-free</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<p><img src="/pictures/11Root_directory_expansion/202205201623177976_4.gif" alt="添加软件源"></p>
+<h1 id="Step-Four-安装gparted应用"><a href="#Step-Four-安装gparted应用" class="headerlink" title="Step Four:安装gparted应用"></a>Step Four:安装gparted应用</h1><ol>
+<li>先通过 <code>sudo apt update</code>更新源信息；</li>
+<li>然后通过 <code>sudo apt install gparted</code> 命令来安装gparted工具。</li>
+</ol>
+<p><img src="/pictures/11Root_directory_expansion/202205201623434987_5.gif" alt="更新"></p>
+<h1 id="Step-Five-使用gparted进行扩容操作"><a href="#Step-Five-使用gparted进行扩容操作" class="headerlink" title="Step Five 使用gparted进行扩容操作"></a>Step Five 使用gparted进行扩容操作</h1><h2 id="观察当前分区"><a href="#观察当前分区" class="headerlink" title="观察当前分区"></a>观察当前分区</h2><ul>
+<li>应用打开后，可以观察到如下硬盘分区的情况，其中Roota 和 Rootb 则是我们说的AB镜像分区，他们的大小是一样大，也就是我们根目录的大小；</li>
+<li>可以看到下图中我的根目录已经被我调整成了30G了（原来只有15G）；</li>
+<li>那么下面我们在这30G的基础上，再将其调整成40G大小。</li>
+</ul>
+<p><img src="/pictures/11Root_directory_expansion/202205201148141907_image.png" alt="GParted截图"></p>
+<h2 id="压缩data分区"><a href="#压缩data分区" class="headerlink" title="压缩data分区"></a>压缩data分区</h2><ul>
+<li>我们首先需要压缩data分区的空间，总共压缩20G出来，后面给Roota 和 Rootb一人分配个10G；</li>
+<li>先选中data分区，然后右键选择【更改大小&#x2F;移动】选项；</li>
+<li>然后在“之前的空余空间”设置项中，填写20G大小换算成MB，就是  <strong>20480</strong> ；</li>
+<li>再然后在“之后的空余空间”输入框中点击一下，确保为0；</li>
+<li>最后点击一下【调整大小】按钮就完事了。</li>
+</ul>
+<p><img src="/pictures/11Root_directory_expansion/202205201624567146_6.gif" alt="缩小Data分区"></p>
+<p>压缩后的效果如下图所示，多出一个20G可用的空间了：</p>
+<p><img src="/pictures/11Root_directory_expansion/202205201625447933_7.png" alt="结果"></p>
+<p>完成上面那步骤后，估计你也知道下面该怎么玩了，跟拼积木一样，先将这20G空间与上面紧挨着的Rootb空间合并；</p>
+<ul>
+<li>然后再将Rootb的空间压缩个10G出来；</li>
+<li>最后将这10G空间与Roota合并；</li>
+<li>最终应用就大功能告成了！</li>
+</ul>
+<h2 id="Rootb分区合并空闲空间"><a href="#Rootb分区合并空闲空间" class="headerlink" title="Rootb分区合并空闲空间"></a>Rootb分区合并空闲空间</h2><p>按照下图操作完成合并</p>
+<p><img src="/pictures/11Root_directory_expansion/202205201626106018_8.gif" alt="合并空闲空间"></p>
+<h2 id="Rootb分区压缩空间"><a href="#Rootb分区压缩空间" class="headerlink" title="Rootb分区压缩空间"></a>Rootb分区压缩空间</h2><p>与上面同样的操作，将此时扩容后的Rootb空间再压缩10G给Roota。</p>
+<p><img src="/pictures/11Root_directory_expansion/20220520162711983_9.gif" alt="缩小B分区"></p>
+<p>压缩完后就像下图一样，这个空间接下来就可以给Roota了：</p>
+<p><img src="/pictures/11Root_directory_expansion/202205201627504966_10.png" alt="结果2"></p>
+<h2 id="Roota合并空闲空间"><a href="#Roota合并空闲空间" class="headerlink" title="Roota合并空闲空间"></a>Roota合并空闲空间</h2><p>老办法，直接按照下图将空余空间直接给Roota拉满即可：</p>
+<p><img src="/pictures/11Root_directory_expansion/202205201629096274_12.gif" alt="合并空闲空间2"></p>
+<h2 id="核实最终空间分配情况"><a href="#核实最终空间分配情况" class="headerlink" title="核实最终空间分配情况"></a>核实最终空间分配情况</h2><ul>
+<li>有时候可能在操作的时候没注意，会跑出来个1MB的未分配空间，不用理会也是可以的；</li>
+<li>不过你要是有强迫症，那按照上面方法，把这些未分配的空间随便合并到哪个空间就行；</li>
+<li>要学会举一反三不能钻牛角尖哈。</li>
+</ul>
+<p><img src="/pictures/11Root_directory_expansion/202205201629343521_13.png" alt="最终结果"></p>
+<h2 id="应用最终的数据变更"><a href="#应用最终的数据变更" class="headerlink" title="应用最终的数据变更"></a>应用最终的数据变更</h2><ul>
+<li>在做这一步之间，还有后悔药，一旦执行了这一步，有可能会存在意外，导致数据不可恢复；</li>
+<li><strong>请在执行此操作之前，确认你是想好了，出了问题这锅自己背呀。</strong></li>
+<li>这一步的操作，根据自己机器性能和数据量大小不同，耐心等待即可，完成后就会有成功的提示。</li>
+</ul>
+<p><img src="/pictures/11Root_directory_expansion/202205201629545073_15.gif" alt="应用更改"></p>
+<h2 id="最终核实分区情况："><a href="#最终核实分区情况：" class="headerlink" title="最终核实分区情况："></a>最终核实分区情况：</h2><p>完成后，即可看到上方的应用按钮是置灰的，此时分区大小也是与你预期是一致的。</p>
+<p><img src="/pictures/11Root_directory_expansion/202205201630101848_16.png" alt="重新分区完成"></p>
+<h2 id="验证你的成果"><a href="#验证你的成果" class="headerlink" title="验证你的成果"></a>验证你的成果</h2><p>直接重启你的系统，检查下你的系统盘容量吧！</p>
+<p><img src="/pictures/11Root_directory_expansion/202205201630304146_17.png" alt="重启后"></p>
+<h1 id="后记"><a href="#后记" class="headerlink" title="后记"></a>后记</h1><ul>
+<li>基于这个根分区大小的诉求，我们也在新版本的安装器中，增加了在全盘安装时可以自定义调整根分区大小的功能，在V20.6新版本镜像中就可以体验了。</li>
+<li>此方案不仅仅只是适用于全盘分区的情况，适用于任何分区安装方式的后期调整，只要思路原理清晰，即可顺利完成。</li>
+</ul>
+</div></article><div class="post-meta__tag-list"><a class="post-meta__tags" href="/tags/linux/">linux</a><a class="post-meta__tags" href="/tags/%E6%89%A9%E5%AE%B9/">扩容</a></div><nav id="pagination"><div class="prev-post pull-left"><a href="/2022/11/03/01systemd_service/"><i class="fa fa-chevron-left">  </i><span>如何自己写一个开机自启动服务？</span></a></div><div class="next-post pull-right"><a href="/2022/09/26/06JianKongShiMoWenDang/"><span>监控石墨文档的文件数据变化，并提交之明道云</span><i class="fa fa-chevron-right"></i></a></div></nav><div id="vcomment"></div><script src="https://cdn1.lncld.net/static/js/3.0.4/av-min.js"></script><script src="https://cdn.jsdelivr.net/npm/valine/dist/Valine.min.js"></script><script>var notify = 'false' == 'true';
+var verify = 'false' == 'true';
+var record_ip = 'false' == 'true';
+var GUEST_INFO = ['nick','mail','link'];
+var guest_info = 'nick'.split(',').filter(function(item){
+  return GUEST_INFO.indexOf(item) > -1
+});
+guest_info = guest_info.length == 0 ? GUEST_INFO :guest_info;
+window.valine = new Valine({
+  el:'#vcomment',
+  notify:notify,
+  verify:verify,
+  recordIP:record_ip,
+  appId:'F1Yvbj0NxwrB3DRaljWZOPe9-gzGzoHsz',
+  appKey:'vvI8fXV2CIAJXrex6pBlFHBz',
+  placeholder:'留下您的评论建议吧~',
+  avatar:'wavatar',
+  guest_info:guest_info,
+  pageSize:'10',
+  lang: 'zh-cn'
+})</script></div></div><footer><div class="layout" id="footer"><div class="copyright">&copy;2021 - 2023 By babyfengfjx</div><div class="framework-info"><span>驱动 - </span><a target="_blank" rel="noopener" href="http://hexo.io"><span>Hexo</span></a><span class="footer-separator">|</span><span>主题 - </span><a target="_blank" rel="noopener" href="https://github.com/Molunerfinn/hexo-theme-melody"><span>Melody</span></a></div><div class="busuanzi"><script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script><span id="busuanzi_container_page_pv"><i class="fa fa-file"></i><span id="busuanzi_value_page_pv"></span><span></span></span></div></div></footer><i class="fa fa-arrow-up" id="go-up" aria-hidden="true"></i><script src="https://cdn.jsdelivr.net/npm/animejs@latest/lib/anime.min.js"></script><script src="https://cdn.jsdelivr.net/npm/jquery@latest/dist/jquery.min.js"></script><script src="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@latest/dist/jquery.fancybox.min.js"></script><script src="https://cdn.jsdelivr.net/npm/velocity-animate@latest/velocity.min.js"></script><script src="https://cdn.jsdelivr.net/npm/velocity-ui-pack@latest/velocity.ui.min.js"></script><script src="/js/utils.js?version=1.9.1"></script><script src="/js/fancybox.js?version=1.9.1"></script><script src="/js/sidebar.js?version=1.9.1"></script><script src="/js/copy.js?version=1.9.1"></script><script src="/js/fireworks.js?version=1.9.1"></script><script src="/js/transition.js?version=1.9.1"></script><script src="/js/scroll.js?version=1.9.1"></script><script src="/js/head.js?version=1.9.1"></script><script src="/js/search/algolia.js"></script><script>if(/Android|webOS|iPhone|iPod|iPad|BlackBerry/i.test(navigator.userAgent)) {
+  $('#nav').addClass('is-mobile')
+  $('footer').addClass('is-mobile')
+  $('#top-container').addClass('is-mobile')
+}</script><div class="search-dialog" id="algolia-search"><div class="search-dialog__title" id="algolia-search-title">Algolia</div><div id="algolia-input-panel"><div id="algolia-search-input"></div></div><hr><div id="algolia-search-results"><div id="algolia-hits"></div><div id="algolia-pagination"></div><div id="algolia-stats"></div></div><span class="search-close-button"><i class="fa fa-times"></i></span></div><div class="search-mask"></div></body></html>

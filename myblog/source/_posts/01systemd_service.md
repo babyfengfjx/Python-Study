@@ -5,7 +5,7 @@ categories:
 - systemd
 tags:
 - linux
-date: 2023-01-03 13:30:34
+date: 2022-11-03 13:30:34
 ---
 # systemd服务介绍
 > systemd 是 Linux 下一个与 SysV 和 LSB 初始化脚本兼容的系统和服务管理器。systemd 使用 socket 和 D-Bus 来开启服务，提供基于守护进程的按需启动策略，保留了 Linux cgroups 的进程追踪功能，支持快照和系统状态恢复，维护挂载和自挂载点，实现了各服务间基于从属关系的一个更为精细的逻辑控制，拥有前卫的并行性能。systemd 无需经过任何修改便可以替代 sysvinit 
