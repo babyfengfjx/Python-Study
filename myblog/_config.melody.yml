@@ -43,7 +43,7 @@ pwa:
 
 # Highlight theme
 # ---------------
-highlight_theme: ocean
+highlight_theme: default
 
 code_word_wrap: true
 

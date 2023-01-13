@@ -1,0 +1,73 @@
+<!DOCTYPE html><html lang="zh-Hans"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"><meta name="description" content="decode中的ignore参数"><meta name="keywords" content="python"><meta name="author" content="babyfengfjx"><meta name="copyright" content="babyfengfjx"><title>decode中的ignore参数 | babyfengfjx'Blog</title><link rel="shortcut icon" href="/melody-favicon.ico"><link rel="stylesheet" href="/css/index.css?version=1.9.1"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/font-awesome@latest/css/font-awesome.min.css?version=1.9.1"><meta name="format-detection" content="telephone=no"><meta http-equiv="x-dns-prefetch-control" content="on"><link rel="dns-prefetch" href="https://cdn.jsdelivr.net"><link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/instantsearch.js@2.1.1/dist/instantsearch.min.css"><script src="https://cdn.jsdelivr.net/npm/instantsearch.js@2.1.1/dist/instantsearch.min.js" defer></script><meta http-equiv="Cache-Control" content="no-transform"><meta http-equiv="Cache-Control" content="no-siteapp"><script>var GLOBAL_CONFIG = { 
+  root: '/',
+  algolia: {"appId":"RPHOC0H5T9","apiKey":"723903e5de5899f6cc4ad96fc50931c1","indexName":"hexo_blog","hits":{"per_page":10},"languages":{"input_placeholder":"搜索文章","hits_empty":"找不到您查询的内容:${query}","hits_stats":"找到 ${hits} 条结果，用时 ${time} 毫秒"}},
+  localSearch: undefined,
+  copy: {
+    success: '复制成功',
+    error: '复制错误',
+    noSupport: '浏览器不支持'
+  },
+  hexoVersion: '6.3.0'
+} </script><meta name="generator" content="Hexo 6.3.0"></head><body><i class="fa fa-arrow-right" id="toggle-sidebar" aria-hidden="true"></i><div id="sidebar" data-display="true"><div class="toggle-sidebar-info text-center"><span data-toggle="切换文章详情">切换站点概览</span><hr></div><div class="sidebar-toc"><div class="sidebar-toc__title">目录</div><div class="sidebar-toc__progress"><span class="progress-notice">你已经读了</span><span class="progress-num">0</span><span class="progress-percentage">%</span><div class="sidebar-toc__progress-bar"></div></div><div class="sidebar-toc__content"><ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#ignore%E7%9A%84%E6%95%88%E6%9E%9C"><span class="toc-number">1.</span> <span class="toc-text">ignore的效果</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#ignore%E5%81%9A%E7%89%B9%E5%AE%9A%E9%94%99%E8%AF%AF%E5%A4%84%E7%90%86%E5%87%BD%E6%95%B0"><span class="toc-number">2.</span> <span class="toc-text">ignore做特定错误处理函数</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%89%A9%E5%B1%95"><span class="toc-number">3.</span> <span class="toc-text">扩展</span></a></li></ol></div></div><div class="author-info hide"><div class="author-info__avatar text-center"><img src="https://github.com/babyfengfjx/babyfengfjx.github.io/blob/main/pictures/avatar/avatar.jpg?raw=true"></div><div class="author-info__name text-center">babyfengfjx</div><div class="author-info__description text-center"></div><hr><div class="author-info-articles"><a class="author-info-articles__archives article-meta" href="/archives"><span class="pull-left">文章</span><span class="pull-right">25</span></a><a class="author-info-articles__tags article-meta" href="/tags"><span class="pull-left">标签</span><span class="pull-right">30</span></a><a class="author-info-articles__categories article-meta" href="/categories"><span class="pull-left">分类</span><span class="pull-right">16</span></a></div></div></div><div id="content-outer"><div class="no-bg" id="top-container"><div id="page-header"><span class="pull-left"> <a id="site-name" href="/">babyfengfjx'Blog</a></span><i class="fa fa-bars toggle-menu pull-right" aria-hidden="true"></i><span class="pull-right menus">   <a class="site-page" href="/">主页</a><a class="site-page" href="/archives">归档</a><a class="site-page" href="/tags">标签</a><a class="site-page" href="/categories">分类</a></span><span class="pull-right"><a class="site-page social-icon search"><i class="fa fa-search"></i><span> 搜索</span></a></span></div><div id="post-info"><div id="post-title">decode中的ignore参数</div><div id="post-meta"><time class="post-meta__date"><i class="fa fa-calendar" aria-hidden="true"></i> 2023-01-09</time><span class="post-meta__separator">|</span><i class="fa fa-inbox post-meta__icon" aria-hidden="true"></i><a class="post-meta__categories" href="/categories/python/">python</a></div></div></div><div class="layout" id="content-inner"><article id="post"><div class="article-container" id="post-content"><blockquote>
+<ul>
+<li>在 <code>decode</code> 函数中，<code>ignore</code> 参数用于指定在解码字符串时应忽略的字符。当解码的字符串包含不属于目标编码的字符时，或者当字符串因某种原因被损坏并包含无效字符时，这可能很有用。</li>
+<li>如果 ignore 参数设置为 True，则 decode() 函数会忽略无效字符，并在解码后的字符串中跳过这些字符。如果 ignore 参数设置为 False，则 decode() 函数会在遇到无效字符时抛出 <code>UnicodeDecodeError</code> 异常。</li>
+</ul>
+</blockquote>
+<h2 id="ignore的效果"><a href="#ignore的效果" class="headerlink" title="ignore的效果"></a>ignore的效果</h2><p>例如，假设我们有一个字符串 ‘hello’，它用 utf-8 编码后为 b’hello’。如果我们尝试使用 ascii 解码该字符串，则会产生无效字符，因为 utf-8 编码的字符可能不在 ascii 编码的字符集中。</p>
+<p>下面是一个例子：</p>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="comment"># 将字符串 s 用 utf-8 编码</span></span><br><span class="line">s = <span class="string">b&#x27;hello&#x27;</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 尝试用 ascii 解码 s，忽略无效字符</span></span><br><span class="line"><span class="built_in">print</span>(s.decode(<span class="string">&#x27;ascii&#x27;</span>, ignore=<span class="literal">True</span>))</span><br><span class="line"></span><br><span class="line"><span class="comment"># 尝试用 ascii 解码 s，在出现无效字符时引发异常</span></span><br><span class="line"><span class="built_in">print</span>(s.decode(<span class="string">&#x27;ascii&#x27;</span>, ignore=<span class="literal">False</span>))</span><br></pre></td></tr></table></figure>
+
+<p>输出结果如下：</p>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line">hello</span><br><span class="line">Traceback (most recent call last):</span><br><span class="line">  File <span class="string">&quot;&lt;stdin&gt;&quot;</span>, line <span class="number">1</span>, <span class="keyword">in</span> &lt;module&gt;</span><br><span class="line">UnicodeDecodeError: <span class="string">&#x27;ascii&#x27;</span> codec can<span class="string">&#x27;t decode byte 0xe9 in position 1: ordinal not in range(128)</span></span><br></pre></td></tr></table></figure>
+
+<h2 id="ignore做特定错误处理函数"><a href="#ignore做特定错误处理函数" class="headerlink" title="ignore做特定错误处理函数"></a>ignore做特定错误处理函数</h2><blockquote>
+<p><code>ignore</code> 参数也可以设置为特定的错误处理函数，该函数可用于自定义处理无效字符的方式。</p>
+</blockquote>
+<p>错误处理函数是一种特殊的函数，用于在解码字符串时处理无效字符的情况。</p>
+<p>错误处理函数接受两个参数：<strong>一个错误名称和一个错误信息</strong>。<strong>如果错误处理函数返回一个字符，则该字符将被插入到解码后的字符串中；如果返回 None，则忽略无效字符</strong>。</p>
+<p>下面是一个例子：</p>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="comment"># 定义错误处理函数</span></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">error_handler</span>(<span class="params">error_name, error_info</span>):</span><br><span class="line">    <span class="comment"># 忽略无效字符</span></span><br><span class="line">    <span class="keyword">return</span> <span class="literal">None</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 将字符串 s 用 utf-8 编码</span></span><br><span class="line">s = <span class="string">b&#x27;hello&#x27;</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 尝试用 ascii 解码 s，使用错误处理函数处理无效字符</span></span><br><span class="line"><span class="built_in">print</span>(s.decode(<span class="string">&#x27;ascii&#x27;</span>, errors=error_handler))</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li><p>error_name 和 error_info 这两个参数是由 decode() 函数自动传入的，不需要我们手动传递。</p>
+</li>
+<li><p>在 decode() 函数中，error_name 参数表示出现的错误的名称，error_info 参数表示错误的具体信息。</p>
+<ul>
+<li>例如，当遇到无效字符时，error_name 参数可能是 ‘strict’；</li>
+<li>error_info 参数可能是一个 UnicodeDecodeError 对象。</li>
+</ul>
+</li>
+</ul>
+<p>错误处理函数在解码字符串时自动调用，用于处理遇到的错误。我们可以在错误处理函数中使用 error_name 和 error_info 参数来判断错误的类型和信息，然后根据需要进行相应的处理。</p>
+<p><strong>这两个参数是否一定要在错误处理函数中使用？</strong></p>
+<p>如果希望在处理错误时判断错误的类型和信息，则可以使用这两个参数。</p>
+<p>例如，可以使用 error_name 参数判断错误的类型，使用 error_info 参数获取错误的详细信息。这样就可以根据错误的不同类型和信息，采用不同的处理方式。</p>
+<p>但是，如果不需要判断错误的类型和信息，也可以不使用这两个参数。例如，可以定义一个简单的错误处理函数，直接返回一个固定的字符或 None。</p>
+<p>总之，错误处理函数是一种非常灵活的工具，可以根据自己的需求自定义错误处理函数。</p>
+<h2 id="扩展"><a href="#扩展" class="headerlink" title="扩展"></a>扩展</h2><p>decode的函数原型是<code>decode([encoding], [errors=‘strict’])</code>，可以用第二个参数控制错误处理的策略，默认的参数就是<code>strict</code>，代表遇到非法字符时抛出异常；<br>如果设置为<code>ignore</code>，则会忽略非法字符；<br>如果设置为<code>replace</code>，则会用?取代非法字符；<br>如果设置为<code>xmlcharrefreplace</code>，则使用XML的字符引用。</p>
+</div></article><div class="post-meta__tag-list"><a class="post-meta__tags" href="/tags/python/">python</a></div><nav id="pagination"><div class="prev-post pull-left"><a href="/2023/01/10/17pdf2image/"><i class="fa fa-chevron-left">  </i><span>PDF转图片（pdf2image）</span></a></div><div class="next-post pull-right"><a href="/2023/01/09/14random_useragent/"><span>使用随机UserAgent来访问链接</span><i class="fa fa-chevron-right"></i></a></div></nav><div id="vcomment"></div><script src="https://cdn1.lncld.net/static/js/3.0.4/av-min.js"></script><script src="https://cdn.jsdelivr.net/npm/valine/dist/Valine.min.js"></script><script>var notify = 'false' == 'true';
+var verify = 'false' == 'true';
+var record_ip = 'false' == 'true';
+var GUEST_INFO = ['nick','mail','link'];
+var guest_info = 'nick'.split(',').filter(function(item){
+  return GUEST_INFO.indexOf(item) > -1
+});
+guest_info = guest_info.length == 0 ? GUEST_INFO :guest_info;
+window.valine = new Valine({
+  el:'#vcomment',
+  notify:notify,
+  verify:verify,
+  recordIP:record_ip,
+  appId:'F1Yvbj0NxwrB3DRaljWZOPe9-gzGzoHsz',
+  appKey:'vvI8fXV2CIAJXrex6pBlFHBz',
+  placeholder:'留下您的评论建议吧~',
+  avatar:'wavatar',
+  guest_info:guest_info,
+  pageSize:'10',
+  lang: 'zh-cn'
+})</script></div></div><footer><div class="layout" id="footer"><div class="copyright">&copy;2021 - 2023 By babyfengfjx</div><div class="framework-info"><span>驱动 - </span><a target="_blank" rel="noopener" href="http://hexo.io"><span>Hexo</span></a><span class="footer-separator">|</span><span>主题 - </span><a target="_blank" rel="noopener" href="https://github.com/Molunerfinn/hexo-theme-melody"><span>Melody</span></a></div><div class="busuanzi"><script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script><span id="busuanzi_container_page_pv"><i class="fa fa-file"></i><span id="busuanzi_value_page_pv"></span><span></span></span></div></div></footer><i class="fa fa-arrow-up" id="go-up" aria-hidden="true"></i><script src="https://cdn.jsdelivr.net/npm/animejs@latest/lib/anime.min.js"></script><script src="https://cdn.jsdelivr.net/npm/jquery@latest/dist/jquery.min.js"></script><script src="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@latest/dist/jquery.fancybox.min.js"></script><script src="https://cdn.jsdelivr.net/npm/velocity-animate@latest/velocity.min.js"></script><script src="https://cdn.jsdelivr.net/npm/velocity-ui-pack@latest/velocity.ui.min.js"></script><script src="/js/utils.js?version=1.9.1"></script><script src="/js/fancybox.js?version=1.9.1"></script><script src="/js/sidebar.js?version=1.9.1"></script><script src="/js/copy.js?version=1.9.1"></script><script src="/js/fireworks.js?version=1.9.1"></script><script src="/js/transition.js?version=1.9.1"></script><script src="/js/scroll.js?version=1.9.1"></script><script src="/js/head.js?version=1.9.1"></script><script src="/js/search/algolia.js"></script><script>if(/Android|webOS|iPhone|iPod|iPad|BlackBerry/i.test(navigator.userAgent)) {
+  $('#nav').addClass('is-mobile')
+  $('footer').addClass('is-mobile')
+  $('#top-container').addClass('is-mobile')
+}</script><div class="search-dialog" id="algolia-search"><div class="search-dialog__title" id="algolia-search-title">Algolia</div><div id="algolia-input-panel"><div id="algolia-search-input"></div></div><hr><div id="algolia-search-results"><div id="algolia-hits"></div><div id="algolia-pagination"></div><div id="algolia-stats"></div></div><span class="search-close-button"><i class="fa fa-times"></i></span></div><div class="search-mask"></div></body></html>

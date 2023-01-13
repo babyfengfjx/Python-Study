@@ -1,0 +1,79 @@
+<!DOCTYPE html><html lang="zh-Hans"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"><meta name="description" content="rsync同步"><meta name="keywords" content="linux,rsync"><meta name="author" content="babyfengfjx"><meta name="copyright" content="babyfengfjx"><title>rsync同步 | babyfengfjx'Blog</title><link rel="shortcut icon" href="/melody-favicon.ico"><link rel="stylesheet" href="/css/index.css?version=1.9.1"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/font-awesome@latest/css/font-awesome.min.css?version=1.9.1"><meta name="format-detection" content="telephone=no"><meta http-equiv="x-dns-prefetch-control" content="on"><link rel="dns-prefetch" href="https://cdn.jsdelivr.net"><link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/instantsearch.js@2.1.1/dist/instantsearch.min.css"><script src="https://cdn.jsdelivr.net/npm/instantsearch.js@2.1.1/dist/instantsearch.min.js" defer></script><meta http-equiv="Cache-Control" content="no-transform"><meta http-equiv="Cache-Control" content="no-siteapp"><script>var GLOBAL_CONFIG = { 
+  root: '/',
+  algolia: {"appId":"RPHOC0H5T9","apiKey":"723903e5de5899f6cc4ad96fc50931c1","indexName":"hexo_blog","hits":{"per_page":10},"languages":{"input_placeholder":"搜索文章","hits_empty":"找不到您查询的内容:${query}","hits_stats":"找到 ${hits} 条结果，用时 ${time} 毫秒"}},
+  localSearch: undefined,
+  copy: {
+    success: '复制成功',
+    error: '复制错误',
+    noSupport: '浏览器不支持'
+  },
+  hexoVersion: '6.3.0'
+} </script><meta name="generator" content="Hexo 6.3.0"></head><body><i class="fa fa-arrow-right" id="toggle-sidebar" aria-hidden="true"></i><div id="sidebar" data-display="true"><div class="toggle-sidebar-info text-center"><span data-toggle="切换文章详情">切换站点概览</span><hr></div><div class="sidebar-toc"><div class="sidebar-toc__title">目录</div><div class="sidebar-toc__progress"><span class="progress-notice">你已经读了</span><span class="progress-num">0</span><span class="progress-percentage">%</span><div class="sidebar-toc__progress-bar"></div></div><div class="sidebar-toc__content"><ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BB%8E%E6%9C%AC%E6%9C%BA%E5%A4%8D%E5%88%B6%E5%88%B0%E8%BF%9C%E7%A8%8B%E4%B8%BB%E6%9C%BA"><span class="toc-number">1.</span> <span class="toc-text">从本机复制到远程主机</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BB%8E%E8%BF%9C%E7%A8%8B%E4%B8%BB%E6%9C%BA%E5%A4%8D%E5%88%B6%E5%88%B0%E6%9C%AC%E6%9C%BA"><span class="toc-number">2.</span> <span class="toc-text">从远程主机复制到本机</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%89%A9%E5%B1%95"><span class="toc-number">3.</span> <span class="toc-text">扩展</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%AE%9A%E6%97%B6%E5%90%8C%E6%AD%A5%E8%84%9A%E6%9C%AC"><span class="toc-number">4.</span> <span class="toc-text">定时同步脚本</span></a></li></ol></div></div><div class="author-info hide"><div class="author-info__avatar text-center"><img src="https://github.com/babyfengfjx/babyfengfjx.github.io/blob/main/pictures/avatar/avatar.jpg?raw=true"></div><div class="author-info__name text-center">babyfengfjx</div><div class="author-info__description text-center"></div><hr><div class="author-info-articles"><a class="author-info-articles__archives article-meta" href="/archives"><span class="pull-left">文章</span><span class="pull-right">25</span></a><a class="author-info-articles__tags article-meta" href="/tags"><span class="pull-left">标签</span><span class="pull-right">30</span></a><a class="author-info-articles__categories article-meta" href="/categories"><span class="pull-left">分类</span><span class="pull-right">16</span></a></div></div></div><div id="content-outer"><div class="no-bg" id="top-container"><div id="page-header"><span class="pull-left"> <a id="site-name" href="/">babyfengfjx'Blog</a></span><i class="fa fa-bars toggle-menu pull-right" aria-hidden="true"></i><span class="pull-right menus">   <a class="site-page" href="/">主页</a><a class="site-page" href="/archives">归档</a><a class="site-page" href="/tags">标签</a><a class="site-page" href="/categories">分类</a></span><span class="pull-right"><a class="site-page social-icon search"><i class="fa fa-search"></i><span> 搜索</span></a></span></div><div id="post-info"><div id="post-title">rsync同步</div><div id="post-meta"><time class="post-meta__date"><i class="fa fa-calendar" aria-hidden="true"></i> 2023-01-11</time><span class="post-meta__separator">|</span><i class="fa fa-inbox post-meta__icon" aria-hidden="true"></i><a class="post-meta__categories" href="/categories/linux/">linux</a></div></div></div><div class="layout" id="content-inner"><article id="post"><div class="article-container" id="post-content"><p><code>rsync</code> 是一个用于在两个位置同步文件和目录的命令行工具。 它可用于在网络上将文件从一台电脑复制到另一台电脑。 要使用 rsync 从一台电脑同步文件到另一台电脑，请使用以下命令:</p>
+<h2 id="从本机复制到远程主机"><a href="#从本机复制到远程主机" class="headerlink" title="从本机复制到远程主机"></a>从本机复制到远程主机</h2><figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">rsync -avz -e ssh /path/to/local/files  username@remote_host:/path/to/remote/files</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>参数 -a 代表 保留文件权限，所有权和时间戳。</li>
+<li>参数 -v 让 rsync 变得详细，这样您就可以看到传输进度。 </li>
+<li>参数 -z 代表 在传输之前压缩数据，这可以加速网络上的传输。</li>
+<li>参数 -e ssh 代表使用 SSH 连接到远程主机。 这允许您在网络上安全地传输文件。</li>
+<li>username 是您登录远程主机的用户名，</li>
+<li>remote_host 是远程计算机的主机名或 IP 地址。</li>
+</ul>
+<p>例如，如果远程主机的 IP 地址为 192.168.1.100，您想将本地机器上目录 <code>/Users/johndoe/Desktop/myfiles </code>中的文件复制到远程主机上的目录 <code>/home/johndoe/Desktop/myfiles</code>，则命令如下:</p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">rsync -avz -e ssh   /Users/johndoe/Desktop/myfiles    johndoe@192.168.1.100:/home/johndoe/Desktop/myfiles</span><br></pre></td></tr></table></figure>
+
+<p>运行 <code>rsync</code> 命令的用户应具有源目录的读取权限和目标目录的写入权限，否则它将失败。</p>
+<h2 id="从远程主机复制到本机"><a href="#从远程主机复制到本机" class="headerlink" title="从远程主机复制到本机"></a>从远程主机复制到本机</h2><p>如果要将文件从远程主机复制到本地计算机，您只需要简单地交换本地和远程文件路径就可以了。具体命令如下:</p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">rsync -avz -e ssh username@remote_host:/path/to/remote/files    /path/to/local/files</span><br></pre></td></tr></table></figure>
+
+<p>username 是远程主机登录用户名，remote_host 是远程计算机的主机名或 IP 地址, <code>/path/to/remote/files </code>是远程文件的路径，&#x2F;path&#x2F;to&#x2F;local&#x2F;files 是本地文件夹路径</p>
+<p>例如，如果你想要从远程主机 IP 为 192.168.1.100 上的目录 <code>/home/johndoe/Desktop/myfiles</code> 中的文件复制到本地计算机的 <code>/Users/johndoe/Desktop/myfiles</code>， 命令如下:</p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">rsync -avz -e ssh johndoe@192.168.1.100:/home/johndoe/Desktop/myfiles        /Users/johndoe/Desktop/myfiles</span><br></pre></td></tr></table></figure>
+
+<h2 id="扩展"><a href="#扩展" class="headerlink" title="扩展"></a>扩展</h2><p><code>rsync</code> 默认是实现增量同步的，它会只传送新增或者更改过的文件，这样可以大大减少传输时间和带宽的使用。</p>
+<p><code>rsync</code>使用检验和算法比较源和目标文件的差异，并只传送那些差异的部分。 这就是为什么 <code>rsync </code>的传输速度比其他文件传输工具要快的原因。</p>
+<p>如果你使用上面给出的命令来传输文件，那么会是增量同步。</p>
+<p>需要注意的是, <code>rsync</code> 只会对文件内容进行增量同步, 如果文件的属性如权限，时间戳等发生了改变，<code>rsync </code>会将其完整的传输过去。</p>
+<p>如果你希望同步文件夹的结构和文件的属性的话，可以使用参数 -a 或者<code>-rlptgoD -a</code>等同于 <code>-rlptgoD</code>，代表将文件的所有属性同步过去 -r 代表递归，传递子文件夹 -l 代表将符号链接作为符号链接来传递 -p 代表保留文件权限 -t 代表保留文件时间戳 -g 代表保留文件组 -o 代表保留文件用户 -D 代表保留特殊文件。</p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">rsync -avrlptgoD -e ssh </span><br><span class="line">johndoe@192.168.1.100:/home/johndoe/Desktop/myfiles      </span><br><span class="line">/Users/johndoe/Desktop/myfiles</span><br></pre></td></tr></table></figure>
+
+<p>这样可以保证源文件夹和目标文.</p>
+<p>除了上述参数之外，<code>rsync</code>还支持<code>--ignore-existing</code>参数, 只会传递新增的文件，这可以用来在更新文件时避免覆盖已经修改过的文件。</p>
+<p>如果你希望将远程目录和本地目录完全同步，并且本地目录是新建的，可以使用 <code>--delete</code>参数，来删除本地目录中源目录没有的文件</p>
+<h2 id="定时同步脚本"><a href="#定时同步脚本" class="headerlink" title="定时同步脚本"></a>定时同步脚本</h2><p>可以使用 Linux 上的 cron 工具来设置定时自动同步命令。cron 是一种定时任务计划程序，可以在特定时间自动执行命令。</p>
+<p>首先打开 crontab 文件</p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">crontab -e</span><br></pre></td></tr></table></figure>
+
+<p>添加如下内容</p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line">0 0 * * *    rsync -avz -e  ssh /path/to/local/files     username@remote_host:/path/to/remote/files</span><br></pre></td></tr></table></figure>
+
+<p>其中的 “0 0 * * *” 代表每天的 00:00 (即凌晨) 执行一次 rsync 命令。如果希望在其他时间执行此命令，可以根据需要修改此部分。</p>
+<p>需要注意的是, 这里给出的命令是基于每天的时间运行的,如果需要设置更高级的时间计划，如每周、每月或指定时间执行, 可以参考cron 的语法来编写 例如 :</p>
+<figure class="highlight shell"><table><tr><td class="code"><pre><span class="line"><span class="meta prompt_"># </span><span class="language-bash">每周一的10:30执行</span></span><br><span class="line">30 10 * * 1  rsync -avz -e ssh /path/to/local/files username@remote_host:/path/to/remote/files</span><br><span class="line"><span class="meta prompt_">#</span><span class="language-bash">每小时的10分钟执行</span></span><br><span class="line">10 * * * * rsync -avz -e ssh /path/to/local/files username@remote_host:/path/to/remote/files</span><br></pre></td></tr></table></figure>
+
+<p>需要注意的是, cron 只会在系统开机之后才会开始执行定时任务， 如果你需要在系统启动时立即执行任务，需要将任务命令加入系统启动脚本中，如 &#x2F;etc&#x2F;rc.local 文件或者systemd 中。</p>
+</div></article><div class="post-meta__tag-list"><a class="post-meta__tags" href="/tags/linux/">linux</a><a class="post-meta__tags" href="/tags/rsync/">rsync</a></div><nav id="pagination"><div class="prev-post pull-left"><a href="/2023/01/12/20dynamicpr_countbin1/"><i class="fa fa-chevron-left">  </i><span>前n个数字二进制中 1 的个数</span></a></div><div class="next-post pull-right"><a href="/2023/01/10/17pdf2image/"><span>PDF转图片（pdf2image）</span><i class="fa fa-chevron-right"></i></a></div></nav><div id="vcomment"></div><script src="https://cdn1.lncld.net/static/js/3.0.4/av-min.js"></script><script src="https://cdn.jsdelivr.net/npm/valine/dist/Valine.min.js"></script><script>var notify = 'false' == 'true';
+var verify = 'false' == 'true';
+var record_ip = 'false' == 'true';
+var GUEST_INFO = ['nick','mail','link'];
+var guest_info = 'nick'.split(',').filter(function(item){
+  return GUEST_INFO.indexOf(item) > -1
+});
+guest_info = guest_info.length == 0 ? GUEST_INFO :guest_info;
+window.valine = new Valine({
+  el:'#vcomment',
+  notify:notify,
+  verify:verify,
+  recordIP:record_ip,
+  appId:'F1Yvbj0NxwrB3DRaljWZOPe9-gzGzoHsz',
+  appKey:'vvI8fXV2CIAJXrex6pBlFHBz',
+  placeholder:'留下您的评论建议吧~',
+  avatar:'wavatar',
+  guest_info:guest_info,
+  pageSize:'10',
+  lang: 'zh-cn'
+})</script></div></div><footer><div class="layout" id="footer"><div class="copyright">&copy;2021 - 2023 By babyfengfjx</div><div class="framework-info"><span>驱动 - </span><a target="_blank" rel="noopener" href="http://hexo.io"><span>Hexo</span></a><span class="footer-separator">|</span><span>主题 - </span><a target="_blank" rel="noopener" href="https://github.com/Molunerfinn/hexo-theme-melody"><span>Melody</span></a></div><div class="busuanzi"><script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script><span id="busuanzi_container_page_pv"><i class="fa fa-file"></i><span id="busuanzi_value_page_pv"></span><span></span></span></div></div></footer><i class="fa fa-arrow-up" id="go-up" aria-hidden="true"></i><script src="https://cdn.jsdelivr.net/npm/animejs@latest/lib/anime.min.js"></script><script src="https://cdn.jsdelivr.net/npm/jquery@latest/dist/jquery.min.js"></script><script src="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@latest/dist/jquery.fancybox.min.js"></script><script src="https://cdn.jsdelivr.net/npm/velocity-animate@latest/velocity.min.js"></script><script src="https://cdn.jsdelivr.net/npm/velocity-ui-pack@latest/velocity.ui.min.js"></script><script src="/js/utils.js?version=1.9.1"></script><script src="/js/fancybox.js?version=1.9.1"></script><script src="/js/sidebar.js?version=1.9.1"></script><script src="/js/copy.js?version=1.9.1"></script><script src="/js/fireworks.js?version=1.9.1"></script><script src="/js/transition.js?version=1.9.1"></script><script src="/js/scroll.js?version=1.9.1"></script><script src="/js/head.js?version=1.9.1"></script><script src="/js/search/algolia.js"></script><script>if(/Android|webOS|iPhone|iPod|iPad|BlackBerry/i.test(navigator.userAgent)) {
+  $('#nav').addClass('is-mobile')
+  $('footer').addClass('is-mobile')
+  $('#top-container').addClass('is-mobile')
+}</script><div class="search-dialog" id="algolia-search"><div class="search-dialog__title" id="algolia-search-title">Algolia</div><div id="algolia-input-panel"><div id="algolia-search-input"></div></div><hr><div id="algolia-search-results"><div id="algolia-hits"></div><div id="algolia-pagination"></div><div id="algolia-stats"></div></div><span class="search-close-button"><i class="fa fa-times"></i></span></div><div class="search-mask"></div></body></html>
