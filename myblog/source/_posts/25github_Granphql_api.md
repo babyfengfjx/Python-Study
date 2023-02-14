@@ -14,7 +14,7 @@ date: 2023-02-14 16:21:34
 > - 最近公司的bug和需求都转移到github处理了，因github上issue的状态非常少，只有open和close，无法体现bug流转的中间状态，所以研发又创建了看板，在github看板上可以自定义对应issue的状态信息。
 > - 因之前已经将禅道的bug信息全部同步到了明道云，我们对bug的监控都是在明道云开展，这次新增了一个github就分散了工作平台，会导致工作效率的降低，因此需要将github上的数据实时同步到明道云，与禅道上的数据一同展示。
 > - 当前已经将issue的相关状态同步到明道云了，但是issue在看板中的状态却没有顺利获取到，主要是因为github对project的管理API更换成了GraphQL方式，因不太清楚查询方法，所以就有了下文的探索过程。
-> - 想要获取的状态信息如下：![image-20230214150701111](25github_Granphql_api/image-20230214150701111.png)
+> - 想要获取的状态信息如下：![image-20230214153317222](pictures/25github_Granphql_api/image-20230214153317222.png)
 
 ## 了解GraphQL
 
@@ -28,7 +28,7 @@ date: 2023-02-14 16:21:34
 
 通过[github提供的工具](https://docs.github.com/en/graphql/overview/explorer)可以方便的调试查询：
 
-![image-20230214150825606](25github_Granphql_api/image-20230214150825606.png)
+![image-20230214153333918](pictures/25github_Granphql_api/image-20230214153333918.png)
 
 上述截图就是github提供的工具，可以快速的在左侧列中点击选择自己想要查询的字段，实际上这些字段和对象的定义还是比较难懂，可以通过官方提供的接口文档找找对应有用的信息，[projects相关接口文档](https://docs.github.com/en/issues/planning-and-tracking-with-projects/automating-your-project/using-the-api-to-manage-projects)。
 
@@ -36,7 +36,7 @@ date: 2023-02-14 16:21:34
 
 - 其中粉红色部分是可筛选的字段，最终就是需要传递issue编号来查询其在看板中的状态的。
 
-![](25github_Granphql_api/录屏_选择区域_20230214151708.gif)
+![](pictures/25github_Granphql_api/录屏_选择区域_20230214151708.gif)
 
 
 

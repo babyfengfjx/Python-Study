@@ -13,7 +13,7 @@
 <li>最近公司的bug和需求都转移到github处理了，因github上issue的状态非常少，只有open和close，无法体现bug流转的中间状态，所以研发又创建了看板，在github看板上可以自定义对应issue的状态信息。</li>
 <li>因之前已经将禅道的bug信息全部同步到了明道云，我们对bug的监控都是在明道云开展，这次新增了一个github就分散了工作平台，会导致工作效率的降低，因此需要将github上的数据实时同步到明道云，与禅道上的数据一同展示。</li>
 <li>当前已经将issue的相关状态同步到明道云了，但是issue在看板中的状态却没有顺利获取到，主要是因为github对project的管理API更换成了GraphQL方式，因不太清楚查询方法，所以就有了下文的探索过程。</li>
-<li>想要获取的状态信息如下：<img src="/25github_Granphql_api/image-20230214150701111.png" alt="image-20230214150701111"></li>
+<li>想要获取的状态信息如下：<img src="/pictures/25github_Granphql_api/image-20230214153317222.png" alt="image-20230214153317222"></li>
 </ul>
 </blockquote>
 <h2 id="了解GraphQL"><a href="#了解GraphQL" class="headerlink" title="了解GraphQL"></a>了解GraphQL</h2><p><a target="_blank" rel="noopener" href="https://graphql.cn/">详情可以访问官网</a></p>
@@ -22,13 +22,13 @@
 <p>反正这个查询是真的不会用，为了找这个project中的issue状态都玩了一天多，才通过github提供的工具帮忙解决了查询的语句写法。</p>
 </blockquote>
 <h2 id="查询操作"><a href="#查询操作" class="headerlink" title="查询操作"></a>查询操作</h2><p>通过<a target="_blank" rel="noopener" href="https://docs.github.com/en/graphql/overview/explorer">github提供的工具</a>可以方便的调试查询：</p>
-<p><img src="/25github_Granphql_api/image-20230214150825606.png" alt="image-20230214150825606"></p>
+<p><img src="/pictures/25github_Granphql_api/image-20230214153333918.png" alt="image-20230214153333918"></p>
 <p>上述截图就是github提供的工具，可以快速的在左侧列中点击选择自己想要查询的字段，实际上这些字段和对象的定义还是比较难懂，可以通过官方提供的接口文档找找对应有用的信息，<a target="_blank" rel="noopener" href="https://docs.github.com/en/issues/planning-and-tracking-with-projects/automating-your-project/using-the-api-to-manage-projects">projects相关接口文档</a>。</p>
 <p>通过左边的对象不断的尝试，最终可以通过仓库》issue》project这个级别依次寻找到想要的内容：</p>
 <ul>
 <li>其中粉红色部分是可筛选的字段，最终就是需要传递issue编号来查询其在看板中的状态的。</li>
 </ul>
-<p><img src="/25github_Granphql_api/%E5%BD%95%E5%B1%8F_%E9%80%89%E6%8B%A9%E5%8C%BA%E5%9F%9F_20230214151708.gif"></p>
+<p><img src="/pictures/25github_Granphql_api/%E5%BD%95%E5%B1%8F_%E9%80%89%E6%8B%A9%E5%8C%BA%E5%9F%9F_20230214151708.gif"></p>
 <h2 id="编码实现请求"><a href="#编码实现请求" class="headerlink" title="编码实现请求"></a>编码实现请求</h2><p>通过上面的尝试，最终获取到了查询语句的内容为：</p>
 <figure class="highlight sql"><table><tr><td class="code"><pre><span class="line">&#123;</span><br><span class="line">                          repository(name: &quot;developer-center&quot;, owner: &quot;linuxdeepin&quot;) &#123;</span><br><span class="line">                            issue(number: <span class="operator">%</span>d) &#123;</span><br><span class="line">                              state</span><br><span class="line">                              number</span><br><span class="line">                              projectItems(<span class="keyword">first</span>: <span class="number">2</span>) &#123;</span><br><span class="line">                                nodes &#123;</span><br><span class="line">                                  fieldValueByName(name: &quot;Status&quot;) &#123;</span><br><span class="line">                                    ... <span class="keyword">on</span> ProjectV2ItemFieldSingleSelectValue &#123;</span><br><span class="line">                                      name</span><br><span class="line">                                      field &#123;</span><br><span class="line">                                        ... <span class="keyword">on</span> ProjectV2Field &#123;</span><br><span class="line">                                          name</span><br><span class="line">                                        &#125;</span><br><span class="line">                                      &#125;</span><br><span class="line">                                    &#125;</span><br><span class="line">                                  &#125;</span><br><span class="line">                                  project &#123;</span><br><span class="line">                                    title</span><br><span class="line">                                    id</span><br><span class="line">                                  &#125;</span><br><span class="line">                                &#125;</span><br><span class="line">                              &#125;</span><br><span class="line">                            &#125;</span><br><span class="line">                          &#125;</span><br><span class="line">                        &#125;</span><br></pre></td></tr></table></figure>
 
